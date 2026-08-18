@@ -156,23 +156,81 @@ function authenticateToken(req, res, next) {
     return res.status(403).json({ error: "Invalid or expired session. Please sign in again." });
   }
 
-  req.userCollege = session.college;
-  req.userDept = session.dept || 'General Library';
+  req.userCollege = session.college || session.name;
+  req.userDept = session.dept || session.role || 'Individual';
+  req.userType = session.type || 'institution';
   next();
 }
 
-// 1. REGISTER NEW COLLEGE ACCOUNT ROUTE
+// 1. REGISTER NEW ACCOUNT (INSTITUTION OR INDIVIDUAL)
 app.post('/api/auth/register', (req, res) => {
-  const { college, dept, password } = req.body;
+  const { accountType, college, dept, name, role, email, contact, affiliation, password } = req.body;
+  const isIndividual = (accountType === 'individual');
+  const cleanPass = (password || '').trim();
+
+  if (!cleanPass || cleanPass.length < 3) {
+    return res.status(400).json({ error: "Please enter a valid unique password (at least 3 characters)." });
+  }
+
+  if (isIndividual) {
+    const cleanName = (name || college || '').trim();
+    const cleanRole = (role || 'Independent Researcher / Reader').trim();
+    const cleanUser = (email || contact || cleanName).trim();
+
+    if (!cleanName) {
+      return res.status(400).json({ error: "Please enter your Full Name." });
+    }
+    if (!cleanUser) {
+      return res.status(400).json({ error: "Please enter your Email, Mobile, or Username." });
+    }
+
+    const key = cleanUser.toLowerCase();
+    const nameKey = cleanName.toLowerCase();
+
+    if (registeredAccounts[key] || registeredAccounts[nameKey]) {
+      return res.status(409).json({
+        error: `⚠️ You have already registered! Please go to the "Log In" tab to sign in, or use "Reset Password" to change your password.`
+      });
+    }
+
+    const accountObj = {
+      type: 'individual',
+      name: cleanName,
+      user: cleanUser,
+      role: cleanRole,
+      affiliation: (affiliation || '').trim(),
+      college: `${cleanName} (${cleanRole})`,
+      password: cleanPass,
+      createdAt: new Date().toLocaleDateString()
+    };
+
+    registeredAccounts[key] = accountObj;
+    if (nameKey !== key) registeredAccounts[nameKey] = accountObj;
+    saveAccountsToDisk(registeredAccounts);
+
+    const token = 'KN_TOKEN_IND_' + Buffer.from(cleanName + ':' + Date.now()).toString('base64');
+    activeTokens.set(token, { type: 'individual', name: cleanName, college: accountObj.college, role: cleanRole, dept: cleanRole });
+
+    console.log(`[INDIVIDUAL REGISTERED] Name: "${cleanName}" (${cleanRole})`);
+
+    return res.json({
+      success: true,
+      token,
+      type: 'individual',
+      name: cleanName,
+      college: accountObj.college,
+      role: cleanRole,
+      dept: cleanRole,
+      message: `Welcome ${cleanName}! Individual account created successfully.`
+    });
+  }
+
+  // Institution Account
   const cleanCollege = (college || '').trim();
   const cleanDept = (dept || 'General Library').trim();
-  const cleanPass = (password || '').trim();
 
   if (!cleanCollege) {
     return res.status(400).json({ error: "Please select or enter your institution name." });
-  }
-  if (!cleanPass || cleanPass.length < 3) {
-    return res.status(400).json({ error: "Please enter a valid unique password (at least 3 characters)." });
   }
 
   const key = cleanCollege.toLowerCase();
@@ -183,6 +241,7 @@ app.post('/api/auth/register', (req, res) => {
   }
 
   registeredAccounts[key] = {
+    type: 'institution',
     college: cleanCollege,
     dept: cleanDept,
     password: cleanPass,
@@ -191,25 +250,79 @@ app.post('/api/auth/register', (req, res) => {
   saveAccountsToDisk(registeredAccounts);
 
   const token = 'KN_TOKEN_' + Buffer.from(cleanCollege + ':' + Date.now()).toString('base64');
-  activeTokens.set(token, { college: cleanCollege, dept: cleanDept });
+  activeTokens.set(token, { type: 'institution', college: cleanCollege, dept: cleanDept });
 
   console.log(`[INSTITUTION REGISTERED] College: "${cleanCollege}"`);
 
   return res.json({
     success: true,
     token,
+    type: 'institution',
     college: cleanCollege,
     dept: cleanDept,
     message: `Account registered successfully for ${cleanCollege}! Logged in.`
   });
 });
 
-// 2. SIGN IN / LOGIN ROUTE
+// 2. SIGN IN / LOGIN ROUTE (INSTITUTION OR INDIVIDUAL)
 app.post('/api/auth/login', (req, res) => {
-  const { college, password } = req.body;
-  const cleanCollege = (college || '').trim();
+  const { accountType, college, username, email, password } = req.body;
+  const isIndividual = (accountType === 'individual');
   const cleanPass = (password || '').trim();
 
+  if (isIndividual) {
+    const cleanUser = (username || email || college || '').trim();
+    if (!cleanUser) {
+      return res.status(400).json({ error: "Please enter your Name, Email, or User ID." });
+    }
+
+    const key = cleanUser.toLowerCase();
+    let account = registeredAccounts[key];
+
+    if (!account) {
+      account = Object.values(registeredAccounts).find(a => 
+        a && a.type === 'individual' && (
+          (a.name && a.name.toLowerCase() === key) || 
+          (a.user && a.user.toLowerCase() === key) ||
+          (a.college && a.college.toLowerCase().includes(key))
+        )
+      );
+    }
+
+    if (!account) {
+      return res.status(404).json({
+        error: `⚠️ Individual Account Not Found: "${cleanUser}" is not registered yet. Please click the "Sign Up" tab to register your individual account.`
+      });
+    }
+
+    if (account.password !== cleanPass) {
+      return res.status(401).json({
+        error: `❌ Incorrect Password for "${cleanUser}". Please enter your registered password.`
+      });
+    }
+
+    const name = account.name || cleanUser;
+    const role = account.role || 'Individual Researcher';
+    const collegeId = account.college || `${name} (${role})`;
+    const token = 'KN_TOKEN_IND_' + Buffer.from(name + ':' + Date.now()).toString('base64');
+    activeTokens.set(token, { type: 'individual', name, college: collegeId, role, dept: role });
+
+    console.log(`[INDIVIDUAL SIGN IN] Name: "${name}"`);
+
+    return res.json({
+      success: true,
+      token,
+      type: 'individual',
+      name,
+      college: collegeId,
+      role,
+      dept: role,
+      message: `Welcome back, ${name}! Signed in successfully.`
+    });
+  }
+
+  // Institution Account
+  const cleanCollege = (college || '').trim();
   if (!cleanCollege) {
     return res.status(400).json({ error: "Please select your institution." });
   }
@@ -231,13 +344,14 @@ app.post('/api/auth/login', (req, res) => {
 
   const userDept = account.dept || 'General Library';
   const token = 'KN_TOKEN_' + Buffer.from(cleanCollege + ':' + Date.now()).toString('base64');
-  activeTokens.set(token, { college: cleanCollege, dept: userDept });
+  activeTokens.set(token, { type: 'institution', college: cleanCollege, dept: userDept });
 
   console.log(`[INSTITUTION SIGN IN] College: "${cleanCollege}"`);
 
   return res.json({
     success: true,
     token,
+    type: 'institution',
     college: cleanCollege,
     dept: userDept,
     message: `Welcome back ${cleanCollege}! Signed in successfully.`
@@ -246,22 +360,31 @@ app.post('/api/auth/login', (req, res) => {
 
 // 2b. RESET / CHANGE PASSWORD ROUTE
 app.post('/api/auth/change-password', (req, res) => {
-  const { college, oldPassword, newPassword, confirmPassword } = req.body;
-  const cleanCollege = (college || '').trim();
+  const { accountType, college, username, email, oldPassword, newPassword, confirmPassword } = req.body;
+  const isIndividual = (accountType === 'individual');
+  const targetIdentifier = (isIndividual ? (username || email || college || '') : (college || '')).trim();
   const cleanOldPass = (oldPassword || '').trim();
   const cleanNewPass = (newPassword || '').trim();
   const cleanConfirmPass = (confirmPassword || '').trim();
 
-  if (!cleanCollege) {
-    return res.status(400).json({ error: "Please select or enter your institution name." });
+  if (!targetIdentifier) {
+    return res.status(400).json({ error: isIndividual ? "Please enter your Name, Email, or User ID." : "Please select or enter your institution name." });
   }
 
-  const key = cleanCollege.toLowerCase();
-  const account = registeredAccounts[key];
+  const key = targetIdentifier.toLowerCase();
+  let account = registeredAccounts[key];
+  if (!account && isIndividual) {
+    account = Object.values(registeredAccounts).find(a => 
+      a && a.type === 'individual' && (
+        (a.name && a.name.toLowerCase() === key) || 
+        (a.user && a.user.toLowerCase() === key)
+      )
+    );
+  }
 
   if (!account) {
     return res.status(404).json({
-      error: `⚠️ Account Not Found: "${cleanCollege}" is not registered yet.`
+      error: `⚠️ Account Not Found: "${targetIdentifier}" is not registered yet.`
     });
   }
 
@@ -271,7 +394,7 @@ app.post('/api/auth/change-password', (req, res) => {
 
   if (account.password !== cleanOldPass && cleanOldPass !== 'kannada2026') {
     return res.status(401).json({
-      error: `❌ Incorrect Old Password for "${cleanCollege}".`
+      error: `❌ Incorrect Old Password for "${targetIdentifier}".`
     });
   }
 
@@ -291,11 +414,11 @@ app.post('/api/auth/change-password', (req, res) => {
   account.updatedAt = new Date().toLocaleDateString();
   saveAccountsToDisk(registeredAccounts);
 
-  console.log(`[PASSWORD CHANGED] College: "${cleanCollege}"`);
+  console.log(`[PASSWORD CHANGED] Account: "${targetIdentifier}"`);
 
   return res.json({
     success: true,
-    message: `Password for "${cleanCollege}" changed successfully! You can now log in with your new password.`
+    message: `Password updated successfully for "${targetIdentifier}"! You can now log in with your new password.`
   });
 });
 

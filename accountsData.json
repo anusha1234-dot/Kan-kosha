@@ -22,5 +22,25 @@
     "dept": "Kannada Studies",
     "password": "Kannadallm",
     "createdAt": "18/8/2026"
+  },
+  "anusha@kannada.org": {
+    "type": "individual",
+    "name": "Dr. Anusha",
+    "user": "anusha@kannada.org",
+    "role": "Researcher / Scholar",
+    "affiliation": "",
+    "college": "Dr. Anusha (Researcher / Scholar)",
+    "password": "secretpassword",
+    "createdAt": "18/8/2026"
+  },
+  "dr. anusha": {
+    "type": "individual",
+    "name": "Dr. Anusha",
+    "user": "anusha@kannada.org",
+    "role": "Researcher / Scholar",
+    "affiliation": "",
+    "college": "Dr. Anusha (Researcher / Scholar)",
+    "password": "secretpassword",
+    "createdAt": "18/8/2026"
   }
 }

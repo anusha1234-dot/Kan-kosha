@@ -188,6 +188,16 @@ button.submit:hover{background:var(--navy-dim);}
       <div class="login-sub">NudiKosha (ನುಡಿಕೋಶ) College & School Portal</div>
     </div>
 
+    <!-- ACCOUNT TYPE SELECTOR: INSTITUTION vs INDIVIDUAL -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;background:var(--paper);border:1.5px solid var(--navy);border-radius:6px;padding:4px;" id="accountTypeTabs">
+      <button type="button" id="btnTypeInstitution" style="flex:1;padding:9px 6px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:var(--navy);color:var(--cream);border:none;border-radius:4px;cursor:pointer;transition:all .15s;">
+        🏛️ Institution (College / School)
+      </button>
+      <button type="button" id="btnTypeIndividual" style="flex:1;padding:9px 6px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:transparent;color:var(--ink-mid);border:none;border-radius:4px;cursor:pointer;transition:all .15s;">
+        👤 Individual / Researcher
+      </button>
+    </div>
+
     <!-- TABS: LOG IN vs SIGN UP vs RESET PASSWORD -->
     <div style="display:flex;margin-bottom:20px;border:1.5px solid var(--navy);border-radius:4px;overflow:hidden;" id="authTabs">
       <button type="button" id="tabLogin" style="flex:1;padding:10px 4px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:var(--navy);color:var(--cream);border:none;cursor:pointer;">
@@ -202,61 +212,104 @@ button.submit:hover{background:var(--navy-dim);}
     </div>
 
     <form id="loginForm" autocomplete="off">
-      <label class="field">
-        <span class="lab">Select College / University / School in Karnataka *</span>
-        <select id="loginCollegeSelect">
-          <option value="" disabled selected>-- Select Your College / University / School --</option>
-          <optgroup label="🏛️ Universities & Public Higher Ed Institutions">
-            <option value="University of Mysore">University of Mysore (ಮೈಸೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
-            <option value="Bangalore University">Bangalore University (ಬೆಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Visvesvaraya Technological University (VTU)">VTU Belagavi (ವಿಶ್ವೇಶ್ವರಯ್ಯ ತಾಂತ್ರಿಕ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Karnatak University Dharwad">Karnatak University Dharwad (ಕರ್ನಾಟಕ ವಿ.ವಿ ಧಾರವಾಡ)</option>
-            <option value="Mangalore University">Mangalore University (ಮಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
-            <option value="Kannada University Hampi">Kannada University Hampi (ಕನ್ನಡ ವಿಶ್ವವಿದ್ಯಾಲಯ ಹಂಪಿ)</option>
-            <option value="Tumkur University">Tumkur University (ತುಮಕೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Kuvempu University Shivamogga">Kuvempu University (ಶಿವಮೊಗ್ಗ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Gulbarga University Kalaburagi">Gulbarga University (ಗುಲ್ಬರ್ಗಾ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Davangere University">Davangere University (ದಾವಣಗೆರೆ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
-            <option value="Rani Channamma University Belagavi">Rani Channamma University Belagavi</option>
-            <option value="Vijayanagara Sri Krishnadevaraya University">Vijayanagara Sri Krishnadevaraya Univ Ballari</option>
-          </optgroup>
-          <optgroup label="🏫 Degree Colleges & Government First Grade Colleges (GFGC)">
-            <option value="Government First Grade College Hassan">GFGC Hassan (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಹಾಸನ)</option>
-            <option value="Government First Grade College Mandya">GFGC Mandya (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಮಂಡ್ಯ)</option>
-            <option value="Government First Grade College Mysuru">GFGC Mysuru (ಮೈಸೂರು)</option>
-            <option value="Government First Grade College Belagavi">GFGC Belagavi (ಬೆಳಗಾವಿ)</option>
-            <option value="Government First Grade College Mangaluru">GFGC Mangaluru (ಮಂಗಳೂರು)</option>
-            <option value="Maharani Science College Mysuru">Maharani Science College Mysuru</option>
-            <option value="Central College Bengaluru">Central College Bengaluru</option>
-          </optgroup>
-          <optgroup label="🎓 Engineering & Professional Institutes">
-            <option value="RV College of Engineering (RVCE)">RV College of Engineering (RVCE Bengaluru)</option>
-            <option value="BMS College of Engineering (BMSCE)">BMS College of Engineering (BMSCE)</option>
-            <option value="MSRIT Ramaiah Institute of Technology">MSRIT Ramaiah Institute of Tech Bengaluru</option>
-            <option value="Shridevi Institute of Engineering & Technology">Shridevi Institute of Engg (SIET Tumakuru)</option>
-            <option value="SJCE JSS Science and Tech Mysuru">SJCE JSS Science & Tech Mysuru</option>
-            <option value="NITK Surathkal">NITK Surathkal (Kannada Research)</option>
-            <option value="Chennai Institute of Technology (CIT)">CIT Chennai (Kannada Studies)</option>
-          </optgroup>
-          <optgroup label="🎒 High Schools & Pre-University Colleges (PUC)">
-            <option value="Government Boys High School Hassan">Government Boys High School Hassan</option>
-            <option value="Government Girls PU College Mysuru">Government Girls PU College Mysuru</option>
-            <option value="Morarji Desai Residential School Karnataka">Morarji Desai Residential School</option>
-            <option value="Kendriya Vidyalaya Karnataka Network">Kendriya Vidyalaya Karnataka Network</option>
-          </optgroup>
-          <option value="__OTHER__">✍️ Other Karnataka Institution / School / College (Enter Custom Name)</option>
-        </select>
-      </label>
+      <!-- 1. INSTITUTION AUTH FIELDS WRAPPER -->
+      <div id="institutionAuthWrap">
+        <label class="field">
+          <span class="lab">Select College / University / School in Karnataka *</span>
+          <select id="loginCollegeSelect">
+            <option value="" disabled selected>-- Select Your College / University / School --</option>
+            <optgroup label="🏛️ Universities & Public Higher Ed Institutions">
+              <option value="University of Mysore">University of Mysore (ಮೈಸೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
+              <option value="Bangalore University">Bangalore University (ಬೆಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Visvesvaraya Technological University (VTU)">VTU Belagavi (ವಿಶ್ವೇಶ್ವರಯ್ಯ ತಾಂತ್ರಿಕ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Karnatak University Dharwad">Karnatak University Dharwad (ಕರ್ನಾಟಕ ವಿ.ವಿ ಧಾರವಾಡ)</option>
+              <option value="Mangalore University">Mangalore University (ಮಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
+              <option value="Kannada University Hampi">Kannada University Hampi (ಕನ್ನಡ ವಿಶ್ವವಿದ್ಯಾಲಯ ಹಂಪಿ)</option>
+              <option value="Tumkur University">Tumkur University (ತುಮಕೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Kuvempu University Shivamogga">Kuvempu University (ಶಿವಮೊಗ್ಗ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Gulbarga University Kalaburagi">Gulbarga University (ಗುಲ್ಬರ್ಗಾ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Davangere University">Davangere University (ದಾವಣಗೆರೆ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+              <option value="Rani Channamma University Belagavi">Rani Channamma University Belagavi</option>
+              <option value="Vijayanagara Sri Krishnadevaraya University">Vijayanagara Sri Krishnadevaraya Univ Ballari</option>
+            </optgroup>
+            <optgroup label="🏫 Degree Colleges & Government First Grade Colleges (GFGC)">
+              <option value="Government First Grade College Hassan">GFGC Hassan (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಹಾಸನ)</option>
+              <option value="Government First Grade College Mandya">GFGC Mandya (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಮಂಡ್ಯ)</option>
+              <option value="Government First Grade College Mysuru">GFGC Mysuru (ಮೈಸೂರು)</option>
+              <option value="Government First Grade College Belagavi">GFGC Belagavi (ಬೆಳಗಾವಿ)</option>
+              <option value="Government First Grade College Mangaluru">GFGC Mangaluru (ಮಂಗಳೂರು)</option>
+              <option value="Maharani Science College Mysuru">Maharani Science College Mysuru</option>
+              <option value="Central College Bengaluru">Central College Bengaluru</option>
+            </optgroup>
+            <optgroup label="🎓 Engineering & Professional Institutes">
+              <option value="RV College of Engineering (RVCE)">RV College of Engineering (RVCE Bengaluru)</option>
+              <option value="BMS College of Engineering (BMSCE)">BMS College of Engineering (BMSCE)</option>
+              <option value="MSRIT Ramaiah Institute of Technology">MSRIT Ramaiah Institute of Tech Bengaluru</option>
+              <option value="Shridevi Institute of Engineering & Technology">Shridevi Institute of Engg (SIET Tumakuru)</option>
+              <option value="SJCE JSS Science and Tech Mysuru">SJCE JSS Science & Tech Mysuru</option>
+              <option value="NITK Surathkal">NITK Surathkal (Kannada Research)</option>
+              <option value="Chennai Institute of Technology (CIT)">CIT Chennai (Kannada Studies)</option>
+            </optgroup>
+            <optgroup label="🎒 High Schools & Pre-University Colleges (PUC)">
+              <option value="Government Boys High School Hassan">Government Boys High School Hassan</option>
+              <option value="Government Girls PU College Mysuru">Government Girls PU College Mysuru</option>
+              <option value="Morarji Desai Residential School Karnataka">Morarji Desai Residential School</option>
+              <option value="Kendriya Vidyalaya Karnataka Network">Kendriya Vidyalaya Karnataka Network</option>
+            </optgroup>
+            <option value="__OTHER__">✍️ Other Karnataka Institution / School / College (Enter Custom Name)</option>
+          </select>
+        </label>
 
-      <label class="field" id="customCollegeWrap" style="display:none;">
-        <span class="lab">Enter Institution Name *</span>
-        <input type="text" id="loginCustomCollege" placeholder="e.g. Government PU College, Channarayapatna">
-      </label>
+        <label class="field" id="customCollegeWrap" style="display:none;">
+          <span class="lab">Enter Institution Name *</span>
+          <input type="text" id="loginCustomCollege" placeholder="e.g. Government PU College, Channarayapatna">
+        </label>
 
-      <label class="field" id="deptFieldWrap" style="display:none;">
-        <span class="lab">Department / Wing *</span>
-        <input type="text" id="loginDept" placeholder="e.g. Kannada Studies / Central Library" value="Kannada Studies">
-      </label>
+        <label class="field" id="deptFieldWrap" style="display:none;">
+          <span class="lab">Department / Wing *</span>
+          <input type="text" id="loginDept" placeholder="e.g. Kannada Studies / Central Library" value="Kannada Studies">
+        </label>
+      </div>
+
+      <!-- 2. INDIVIDUAL AUTH FIELDS WRAPPER -->
+      <div id="individualAuthWrap" style="display:none;">
+        <div id="individualLoginFieldsWrap">
+          <label class="field">
+            <span class="lab">Full Name, Email, or User ID *</span>
+            <input type="text" id="loginIndividualUser" placeholder="e.g. Dr. Anusha / anusha@kannada.org">
+          </label>
+        </div>
+
+        <div id="individualSignUpFieldsWrap" style="display:none;">
+          <label class="field">
+            <span class="lab">Full Name (Individual / Scholar) *</span>
+            <input type="text" id="loginIndividualName" placeholder="e.g. Dr. Anusha">
+          </label>
+
+          <div class="row2">
+            <label class="field">
+              <span class="lab">Email or Mobile *</span>
+              <input type="text" id="loginIndividualContact" placeholder="e.g. anusha@kannada.org">
+            </label>
+            <label class="field">
+              <span class="lab">Role / Profession *</span>
+              <select id="loginIndividualRole">
+                <option value="Researcher / Scholar">Researcher / Scholar (ಸಂಶೋಧಕರು)</option>
+                <option value="Faculty / Professor">Faculty / Professor (ಪ್ರಾಧ್ಯಾಪಕರು)</option>
+                <option value="Student / Scholar">Student / Scholar (ವಿದ್ಯಾರ್ಥಿ)</option>
+                <option value="Author / Writer">Author / Writer (ಲೇಖಕರು)</option>
+                <option value="Reader / Book Lover">Reader / Book Lover (ಓದುಗರು)</option>
+                <option value="Other">Other Individual (ಇತರ)</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="lab">Affiliation / Organization / District (Optional)</span>
+            <input type="text" id="loginIndividualAffiliation" placeholder="e.g. Kannada Sahitya Parishat / Bengaluru">
+          </label>
+        </div>
+      </div>
 
       <label class="field" id="passFieldWrap">
         <span class="lab" id="passLabel">Institution Account Password *</span>
@@ -657,6 +710,11 @@ if(loginCollegeSelect){
 
 const btnTypeInstitution = el('btnTypeInstitution');
 const btnTypeIndividual = el('btnTypeIndividual');
+const institutionAuthWrap = el('institutionAuthWrap');
+const individualAuthWrap = el('individualAuthWrap');
+const individualLoginFieldsWrap = el('individualLoginFieldsWrap');
+const individualSignUpFieldsWrap = el('individualSignUpFieldsWrap');
+
 const tabLogin = el('tabLogin');
 const tabSignUp = el('tabSignUp');
 const tabReset = el('tabReset');
@@ -664,54 +722,92 @@ const authSubmitBtn = el('authSubmitBtn');
 const deptFieldWrap = el('deptFieldWrap');
 const passFieldWrap = el('passFieldWrap');
 const resetFieldsWrap = el('resetFieldsWrap');
+
+let currentAccountType = 'institution'; // 'institution' or 'individual'
 let authMode = 'login'; // 'login', 'signup', 'reset'
+
+function updateAuthView(){
+  // 1. Account type switcher styles & panels
+  if(btnTypeInstitution && btnTypeIndividual){
+    if(currentAccountType === 'institution'){
+      btnTypeInstitution.style.background = 'var(--navy)';
+      btnTypeInstitution.style.color = 'var(--cream)';
+      btnTypeIndividual.style.background = 'transparent';
+      btnTypeIndividual.style.color = 'var(--ink-mid)';
+      if(institutionAuthWrap) institutionAuthWrap.style.display = 'block';
+      if(individualAuthWrap) individualAuthWrap.style.display = 'none';
+    } else {
+      btnTypeIndividual.style.background = 'var(--navy)';
+      btnTypeIndividual.style.color = 'var(--cream)';
+      btnTypeInstitution.style.background = 'transparent';
+      btnTypeInstitution.style.color = 'var(--ink-mid)';
+      if(institutionAuthWrap) institutionAuthWrap.style.display = 'none';
+      if(individualAuthWrap) individualAuthWrap.style.display = 'block';
+    }
+  }
+
+  // 2. Tab button styles
+  if(tabLogin && tabSignUp && tabReset){
+    tabLogin.style.background = (authMode === 'login') ? 'var(--navy)' : 'var(--paper)';
+    tabLogin.style.color = (authMode === 'login') ? 'var(--cream)' : 'var(--ink-mid)';
+    tabSignUp.style.background = (authMode === 'signup') ? 'var(--navy)' : 'var(--paper)';
+    tabSignUp.style.color = (authMode === 'signup') ? 'var(--cream)' : 'var(--ink-mid)';
+    tabReset.style.background = (authMode === 'reset') ? 'var(--navy)' : 'var(--paper)';
+    tabReset.style.color = (authMode === 'reset') ? 'var(--cream)' : 'var(--ink-mid)';
+  }
+
+  // 3. Form elements per mode and account type
+  if(currentAccountType === 'institution'){
+    if(deptFieldWrap) deptFieldWrap.style.display = (authMode === 'signup') ? 'block' : 'none';
+    if(passFieldWrap) passFieldWrap.style.display = (authMode === 'reset') ? 'none' : 'block';
+    if(resetFieldsWrap) resetFieldsWrap.style.display = (authMode === 'reset') ? 'block' : 'none';
+    if(el('passLabel')) el('passLabel').textContent = (authMode === 'signup') ? 'Set Institution Password *' : 'Institution Account Password *';
+    if(authSubmitBtn){
+      if(authMode === 'login') authSubmitBtn.textContent = '🔒 Log In as Institution';
+      else if(authMode === 'signup') authSubmitBtn.textContent = '📝 Register College & Set Password';
+      else authSubmitBtn.textContent = '🔐 Reset Institution Password';
+    }
+  } else {
+    // Individual
+    if(individualLoginFieldsWrap) individualLoginFieldsWrap.style.display = (authMode === 'signup') ? 'none' : 'block';
+    if(individualSignUpFieldsWrap) individualSignUpFieldsWrap.style.display = (authMode === 'signup') ? 'block' : 'none';
+    if(passFieldWrap) passFieldWrap.style.display = (authMode === 'reset') ? 'none' : 'block';
+    if(resetFieldsWrap) resetFieldsWrap.style.display = (authMode === 'reset') ? 'block' : 'none';
+    if(el('passLabel')) el('passLabel').textContent = (authMode === 'signup') ? 'Set Personal Password *' : 'Personal Account Password *';
+    if(authSubmitBtn){
+      if(authMode === 'login') authSubmitBtn.textContent = '🔒 Log In as Individual / Researcher';
+      else if(authMode === 'signup') authSubmitBtn.textContent = '📝 Register Individual Account';
+      else authSubmitBtn.textContent = '🔐 Reset Individual Password';
+    }
+  }
+  if(el('loginErr')) el('loginErr').className = 'notice';
+}
+
+if(btnTypeInstitution){
+  btnTypeInstitution.addEventListener('click', ()=>{
+    currentAccountType = 'institution';
+    updateAuthView();
+  });
+}
+if(btnTypeIndividual){
+  btnTypeIndividual.addEventListener('click', ()=>{
+    currentAccountType = 'individual';
+    updateAuthView();
+  });
+}
 
 if(tabLogin && tabSignUp && tabReset){
   tabLogin.addEventListener('click', ()=>{
     authMode = 'login';
-    tabLogin.style.background = 'var(--navy)';
-    tabLogin.style.color = 'var(--cream)';
-    tabSignUp.style.background = 'var(--paper)';
-    tabSignUp.style.color = 'var(--ink-mid)';
-    tabReset.style.background = 'var(--paper)';
-    tabReset.style.color = 'var(--ink-mid)';
-    if(authSubmitBtn) authSubmitBtn.textContent = '🔒 Log In to Library Portal';
-    if(deptFieldWrap) deptFieldWrap.style.display = 'none';
-    if(passFieldWrap) passFieldWrap.style.display = 'block';
-    if(resetFieldsWrap) resetFieldsWrap.style.display = 'none';
-    if(el('passLabel')) el('passLabel').textContent = 'Institution Account Password *';
-    if(el('loginErr')) el('loginErr').className = 'notice';
+    updateAuthView();
   });
-
   tabSignUp.addEventListener('click', ()=>{
     authMode = 'signup';
-    tabSignUp.style.background = 'var(--navy)';
-    tabSignUp.style.color = 'var(--cream)';
-    tabLogin.style.background = 'var(--paper)';
-    tabLogin.style.color = 'var(--ink-mid)';
-    tabReset.style.background = 'var(--paper)';
-    tabReset.style.color = 'var(--ink-mid)';
-    if(authSubmitBtn) authSubmitBtn.textContent = '📝 Register College & Set Unique Password';
-    if(deptFieldWrap) deptFieldWrap.style.display = 'block';
-    if(passFieldWrap) passFieldWrap.style.display = 'block';
-    if(resetFieldsWrap) resetFieldsWrap.style.display = 'none';
-    if(el('passLabel')) el('passLabel').textContent = 'Set Account Password *';
-    if(el('loginErr')) el('loginErr').className = 'notice';
+    updateAuthView();
   });
-
   tabReset.addEventListener('click', ()=>{
     authMode = 'reset';
-    tabReset.style.background = 'var(--navy)';
-    tabReset.style.color = 'var(--cream)';
-    tabLogin.style.background = 'var(--paper)';
-    tabLogin.style.color = 'var(--ink-mid)';
-    tabSignUp.style.background = 'var(--paper)';
-    tabSignUp.style.color = 'var(--ink-mid)';
-    if(authSubmitBtn) authSubmitBtn.textContent = '🔐 Reset & Change Password';
-    if(deptFieldWrap) deptFieldWrap.style.display = 'none';
-    if(passFieldWrap) passFieldWrap.style.display = 'none';
-    if(resetFieldsWrap) resetFieldsWrap.style.display = 'block';
-    if(el('loginErr')) el('loginErr').className = 'notice';
+    updateAuthView();
   });
 }
 
@@ -719,6 +815,12 @@ function resetAuthLoginForm(){
   if(loginCollegeSelect) loginCollegeSelect.value = '';
   if(loginCustomCollege) loginCustomCollege.value = '';
   if(customCollegeWrap) customCollegeWrap.style.display = 'none';
+
+  if(el('loginIndividualUser')) el('loginIndividualUser').value = '';
+  if(el('loginIndividualName')) el('loginIndividualName').value = '';
+  if(el('loginIndividualContact')) el('loginIndividualContact').value = '';
+  if(el('loginIndividualAffiliation')) el('loginIndividualAffiliation').value = '';
+  if(el('loginIndividualRole')) el('loginIndividualRole').value = 'Researcher / Scholar';
 
   if(el('loginPassword')) el('loginPassword').value = '';
   if(el('loginOldPassword')) el('loginOldPassword').value = '';
@@ -728,6 +830,7 @@ function resetAuthLoginForm(){
 
   const errBox = el('loginErr');
   if(errBox) { errBox.className = 'notice'; errBox.innerHTML = ''; }
+  updateAuthView();
 }
 
 function initSession(){
@@ -735,10 +838,11 @@ function initSession(){
   const appScreen = el('appScreen');
   const badge = el('currCollegeBadge');
 
-  if(loggedInUser && loggedInUser.college){
+  if(loggedInUser && (loggedInUser.college || loggedInUser.name)){
     if(loginScreen) loginScreen.style.display = 'none';
     if(appScreen) appScreen.classList.add('show');
-    if(badge) badge.textContent = loggedInUser.college;
+    const isInd = (loggedInUser.type === 'individual');
+    if(badge) badge.textContent = isInd ? `${loggedInUser.name || loggedInUser.college}` : `${loggedInUser.college}`;
     fetchCatalogFromApi();
     renderMyUploadings('');
   } else {
@@ -764,28 +868,38 @@ async function fetchCatalogFromApi(){
   } catch(e){ console.log('Using local catalog memory.'); }
 }
 
-async function performLogin(college, dept, pwd){
+async function performLogin(authPayload){
   const errBox = el('loginErr');
   if(errBox) errBox.className = 'notice';
 
-  if(!college || college.trim() === ''){
-    if(errBox){
-      errBox.className = 'notice show warn';
-      errBox.innerHTML = `<span class="stamp-tag">Selection Required</span><div>Please select your college / university from the dropdown list.</div>`;
+  if(authPayload.accountType === 'individual'){
+    if(authMode === 'signup'){
+      if(!authPayload.name){
+        if(errBox){ errBox.className = 'notice show warn'; errBox.innerHTML = `<span class="stamp-tag">Name Required</span><div>Please enter your Full Name.</div>`; }
+        return;
+      }
+      if(!authPayload.email){
+        if(errBox){ errBox.className = 'notice show warn'; errBox.innerHTML = `<span class="stamp-tag">Contact Required</span><div>Please enter your Email or Mobile Number.</div>`; }
+        return;
+      }
+    } else {
+      if(!authPayload.username){
+        if(errBox){ errBox.className = 'notice show warn'; errBox.innerHTML = `<span class="stamp-tag">User Required</span><div>Please enter your Name, Email, or User ID.</div>`; }
+        return;
+      }
     }
-    return;
-  }
-  if(!pwd || pwd.trim() === ''){
-    if(errBox){
-      errBox.className = 'notice show warn';
-      errBox.innerHTML = `<span class="stamp-tag">Password Required</span><div>Please enter your account password.</div>`;
+  } else {
+    // Institution
+    if(!authPayload.college || authPayload.college.trim() === ''){
+      if(errBox){ errBox.className = 'notice show warn'; errBox.innerHTML = `<span class="stamp-tag">Selection Required</span><div>Please select your college / university from the dropdown list.</div>`; }
+      return;
     }
-    return;
   }
 
-  const cleanCollege = college.trim();
-  const cleanDept = dept || 'General Library';
-  const cleanPwd = pwd.trim();
+  if(!authPayload.password || authPayload.password.trim() === ''){
+    if(errBox){ errBox.className = 'notice show warn'; errBox.innerHTML = `<span class="stamp-tag">Password Required</span><div>Please enter your account password.</div>`; }
+    return;
+  }
 
   const endpoint = (authMode === 'signup') ? '/api/auth/register' : '/api/auth/login';
 
@@ -793,11 +907,17 @@ async function performLogin(college, dept, pwd){
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ college: cleanCollege, dept: cleanDept, password: cleanPwd })
+      body: JSON.stringify(authPayload)
     });
     const data = await res.json();
     if(data.success){
-      loggedInUser = { college: data.college, dept: data.dept, token: data.token };
+      loggedInUser = {
+        type: data.type || authPayload.accountType,
+        name: data.name || data.college,
+        college: data.college,
+        dept: data.dept || data.role || 'General',
+        token: data.token
+      };
       sessionStorage.setItem('kn_session', JSON.stringify(loggedInUser));
       resetAuthLoginForm();
       initSession();
@@ -824,20 +944,27 @@ async function performLogin(college, dept, pwd){
   } catch(e){}
 
   // Local fallback session
-  loggedInUser = { college: cleanCollege, dept: cleanDept, token: 'KN_SESSION_TOKEN' };
+  const fallbackCollege = (authPayload.accountType === 'individual') ? (authPayload.name || authPayload.username || 'Individual Researcher') : authPayload.college;
+  loggedInUser = {
+    type: authPayload.accountType,
+    name: fallbackCollege,
+    college: fallbackCollege,
+    dept: authPayload.dept || authPayload.role || 'General',
+    token: 'KN_SESSION_TOKEN'
+  };
   sessionStorage.setItem('kn_session', JSON.stringify(loggedInUser));
   resetAuthLoginForm();
   initSession();
 }
 
-async function performChangePassword(college, oldPassword, newPassword, confirmPassword, targetNoticeId = 'loginErr'){
+async function performChangePassword(targetIdentifier, oldPassword, newPassword, confirmPassword, targetNoticeId = 'loginErr', accountType = 'institution'){
   const errBox = el(targetNoticeId);
   if(errBox) errBox.className = 'notice';
 
-  if(!college || college.trim() === ''){
+  if(!targetIdentifier || targetIdentifier.trim() === ''){
     if(errBox){
       errBox.className = 'notice show warn';
-      errBox.innerHTML = `<span class="stamp-tag">Selection Required</span><div>Please select your college / university from the dropdown list.</div>`;
+      errBox.innerHTML = `<span class="stamp-tag">Identifier Required</span><div>Please select or enter your institution name / user ID.</div>`;
     }
     return;
   }
@@ -874,7 +1001,14 @@ async function performChangePassword(college, oldPassword, newPassword, confirmP
     const res = await fetch('/api/auth/change-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ college, oldPassword, newPassword, confirmPassword })
+      body: JSON.stringify({
+        accountType,
+        college: targetIdentifier,
+        username: targetIdentifier,
+        oldPassword,
+        newPassword,
+        confirmPassword
+      })
     });
     const data = await res.json();
     if(res.ok && data.success){
@@ -915,18 +1049,38 @@ const loginForm = el('loginForm');
 if(loginForm){
   loginForm.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const selVal = loginCollegeSelect ? loginCollegeSelect.value : '';
-    const college = (selVal === '__OTHER__' && loginCustomCollege) ? loginCustomCollege.value.trim() : selVal;
 
     if(authMode === 'reset'){
+      let targetId = '';
+      if(currentAccountType === 'individual'){
+        targetId = el('loginIndividualUser') ? el('loginIndividualUser').value.trim() : '';
+      } else {
+        const selVal = loginCollegeSelect ? loginCollegeSelect.value : '';
+        targetId = (selVal === '__OTHER__' && loginCustomCollege) ? loginCustomCollege.value.trim() : selVal;
+      }
       const oldPassword = el('loginOldPassword') ? el('loginOldPassword').value.trim() : '';
       const newPassword = el('loginNewPassword') ? el('loginNewPassword').value.trim() : '';
       const confirmPassword = el('loginConfirmPassword') ? el('loginConfirmPassword').value.trim() : '';
-      performChangePassword(college, oldPassword, newPassword, confirmPassword, 'loginErr');
+      performChangePassword(targetId, oldPassword, newPassword, confirmPassword, 'loginErr', currentAccountType);
     } else {
-      const dept = el('loginDept') ? el('loginDept').value.trim() : 'General Library';
       const pwd = el('loginPassword') ? el('loginPassword').value.trim() : '';
-      performLogin(college, dept, pwd);
+      if(currentAccountType === 'individual'){
+        if(authMode === 'signup'){
+          const name = el('loginIndividualName') ? el('loginIndividualName').value.trim() : '';
+          const email = el('loginIndividualContact') ? el('loginIndividualContact').value.trim() : '';
+          const role = el('loginIndividualRole') ? el('loginIndividualRole').value : 'Researcher / Scholar';
+          const affiliation = el('loginIndividualAffiliation') ? el('loginIndividualAffiliation').value.trim() : '';
+          performLogin({ accountType: 'individual', name, email, role, affiliation, password: pwd });
+        } else {
+          const user = el('loginIndividualUser') ? el('loginIndividualUser').value.trim() : '';
+          performLogin({ accountType: 'individual', username: user, email: user, password: pwd });
+        }
+      } else {
+        const selVal = loginCollegeSelect ? loginCollegeSelect.value : '';
+        const college = (selVal === '__OTHER__' && loginCustomCollege) ? loginCustomCollege.value.trim() : selVal;
+        const dept = el('loginDept') ? el('loginDept').value.trim() : 'General Library';
+        performLogin({ accountType: 'institution', college, dept, password: pwd });
+      }
     }
   });
 }
