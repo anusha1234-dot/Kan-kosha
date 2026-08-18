@@ -42,5 +42,25 @@
     "college": "Dr. Anusha (Researcher / Scholar)",
     "password": "secretpassword",
     "createdAt": "18/8/2026"
+  },
+  "gagana.lsgt@gmail.com": {
+    "type": "individual",
+    "name": "Gagana",
+    "user": "gagana.lsgt@gmail.com",
+    "role": "Reader / Book Lover",
+    "affiliation": "Kannada academy",
+    "college": "Gagana (Reader / Book Lover)",
+    "password": "password",
+    "createdAt": "18/8/2026"
+  },
+  "gagana": {
+    "type": "individual",
+    "name": "Gagana",
+    "user": "gagana.lsgt@gmail.com",
+    "role": "Reader / Book Lover",
+    "affiliation": "Kannada academy",
+    "college": "Gagana (Reader / Book Lover)",
+    "password": "password",
+    "createdAt": "18/8/2026"
   }
 }
