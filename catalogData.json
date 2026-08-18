@@ -1,0 +1,188 @@
+[
+  {
+    "id": "KN-NOV-0045",
+    "title": "ಕರ್ವಾಲೋ",
+    "titleEnglish": "Karvalo",
+    "author": "K. P. Poornachandra Tejasvi",
+    "isbn": "978-81-7074-099-9",
+    "copyrightStatus": "copyrighted",
+    "copyrightHolder": "Pustaka Prakashana / Estate of K.P. Poornachandra Tejasvi",
+    "copyrightYear": "1980",
+    "copyrightNotice": "© All rights reserved. Permission required before digitizing or distributing.",
+    "createdByCollege": "Visvesvaraya Technological University (VTU)",
+    "date": "2026-08-14",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1980",
+        "pages": "165",
+        "isbn": "978-81-7074-099-9",
+        "status": "In Progress / Scanning",
+        "date": "2026-08-14",
+        "createdByCollege": "Visvesvaraya Technological University (VTU)"
+      }
+    ]
+  },
+  {
+    "id": "KN-LIT-0007",
+    "title": "ಮಲೆಗಳಲ್ಲಿ ಮದುಮಗಳು",
+    "titleEnglish": "Malegalalli Madumagalu",
+    "author": "Kuvempu",
+    "isbn": "978-81-7074-001-2",
+    "copyrightStatus": "public_domain",
+    "createdByCollege": "University of Mysore",
+    "date": "2026-08-10",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1949",
+        "pages": "720",
+        "status": "Digitized",
+        "date": "2026-08-10",
+        "fileName": "malegalalli_vol1.pdf",
+        "fileSize": "14.20 MB",
+        "createdByCollege": "University of Mysore"
+      },
+      {
+        "edition": "2nd edition",
+        "year": "1967",
+        "pages": "895",
+        "status": "Digitized",
+        "date": "2026-08-15",
+        "fileName": "malegalalli_vol2.pdf",
+        "fileSize": "18.50 MB",
+        "createdByCollege": "University of Mysore"
+      }
+    ]
+  },
+  {
+    "id": "KN-POE-0012",
+    "title": "ಶ್ರೀ ರಾಮಾಯಣ ದರ್ಶನಂ",
+    "titleEnglish": "Sri Ramayana Darshanam",
+    "author": "Kuvempu",
+    "isbn": "978-81-7074-005-0",
+    "copyrightStatus": "permission_available",
+    "permissionHolder": "Kuvempu Bhasha Bharathi Pradhikara",
+    "permissionRef": "KBBP/PERM/2026-088",
+    "createdByCollege": "Kannada University Hampi",
+    "date": "2026-08-12",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1949",
+        "pages": "720",
+        "status": "Digitized",
+        "date": "2026-08-12",
+        "fileName": "ramayana_darshanam.pdf",
+        "fileSize": "12.80 MB",
+        "createdByCollege": "Kannada University Hampi"
+      }
+    ]
+  },
+  {
+    "id": "KN-NOV-0031",
+    "title": "ಚೋಮನ ದುಡಿ",
+    "titleEnglish": "Chomana Dudi",
+    "author": "K. Shivaram Karanth",
+    "isbn": "978-81-8501-012-9",
+    "copyrightStatus": "public_domain",
+    "createdByCollege": "Bangalore University",
+    "date": "2026-08-11",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1933",
+        "pages": "180",
+        "isbn": "978-81-8501-012-9",
+        "status": "Digitized",
+        "date": "2026-08-11",
+        "fileName": "chomana_dudi_1933.pdf",
+        "fileSize": "4.50 MB",
+        "createdByCollege": "Bangalore University"
+      },
+      {
+        "edition": "3rd edition",
+        "year": "1965",
+        "pages": "210",
+        "isbn": "978-81-8501-099-0",
+        "status": "In Progress / Scanning",
+        "date": "2026-08-14",
+        "createdByCollege": "Mangalore University"
+      }
+    ]
+  },
+  {
+    "id": "KN-FOL-0004",
+    "title": "ಜನಪದ ಕಥೆಗಳು",
+    "titleEnglish": "Janapada Kathegalu",
+    "author": "Compiled — H. L. Nage Gowda",
+    "isbn": "978-81-9012-340-1",
+    "copyrightStatus": "public_domain",
+    "createdByCollege": "Karnatak University Dharwad",
+    "date": "2026-08-13",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1975",
+        "pages": "340",
+        "status": "Digitized",
+        "date": "2026-08-13",
+        "fileName": "janapada_kathegalu.pdf",
+        "fileSize": "8.10 MB",
+        "createdByCollege": "Karnatak University Dharwad"
+      }
+    ]
+  },
+  {
+    "id": "KN-HIS-0019",
+    "title": "ಕರ್ನಾಟಕ ಸಂಸ್ಕೃತಿ ಸಮೀಕ್ಷೆ",
+    "titleEnglish": "Karnataka Samskruti Sameekshe",
+    "author": "S. Srikantha Sastri",
+    "isbn": "978-81-2800-412-3",
+    "copyrightStatus": "unknown",
+    "createdByCollege": "Tumkur University",
+    "date": "2026-08-16",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1958",
+        "pages": "412",
+        "status": "In Progress / Scanning",
+        "date": "2026-08-16",
+        "createdByCollege": "Tumkur University"
+      }
+    ]
+  },
+  {
+    "id": "KN-SCI-0002",
+    "title": "ವಿಜ್ಞಾನ ಪ್ರಪಂಚ",
+    "titleEnglish": "Vijnana Prapancha",
+    "author": "Ed. B.G.L. Swamy",
+    "isbn": "978-81-3001-188-7",
+    "copyrightStatus": "public_domain",
+    "createdByCollege": "VTU Belagavi",
+    "date": "2026-08-10",
+    "editions": [
+      {
+        "edition": "1st edition",
+        "year": "1980",
+        "pages": "160",
+        "status": "Digitized",
+        "date": "2026-08-10",
+        "fileName": "vijnana_prapancha_v1.pdf",
+        "fileSize": "6.20 MB",
+        "createdByCollege": "VTU Belagavi"
+      },
+      {
+        "edition": "2nd edition",
+        "year": "1988",
+        "pages": "188",
+        "status": "Digitized",
+        "date": "2026-08-17",
+        "fileName": "vijnana_prapancha_v2.pdf",
+        "fileSize": "7.00 MB",
+        "createdByCollege": "VTU Belagavi"
+      }
+    ]
+  }
+]

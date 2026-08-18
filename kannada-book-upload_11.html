@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ನುಡಿಕೋಶ (NudiKosha) — Karnataka College Library Network</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Noto+Serif+Kannada:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#EAE1CF;--cream-mid:#DDD3BB;--cream-dark:#CFC4AA;
+  --paper:#F5EFE2;--navy:#202A3C;--navy-dim:#2E3E58;
+  --brick:#A13D3D;--brick-soft:#F7E4E4;
+  --gold:#A8823C;--gold-soft:#F7EDD8;
+  --moss:#3F6E52;--moss-soft:#DCF0E5;
+  --ink:#1E160C;--ink-mid:#4A3F31;--ink-dim:#7A6E5C;
+  --hairline:#C8BC9E;--hairline-lt:#E4DDD0;--rule:#B0A48A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--navy);
+  background-image:radial-gradient(ellipse 60% 50% at 15% 60%,rgba(168,130,60,.09) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 85% 20%,rgba(63,110,82,.07) 0%,transparent 60%);
+  min-height:100vh;font-family:'Inter',sans-serif;color:var(--ink);padding:24px 20px 80px;
+}
+.wrap{max-width:1240px;margin:0 auto;}
+
+/* TOP HEADER & SESSION BAR */
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;}
+.drawer-brand{display:flex;align-items:flex-end;}
+.drawer-tab{background:var(--cream);border:1.5px solid var(--hairline);border-bottom:none;border-radius:5px 5px 0 0;padding:10px 22px 14px;position:relative;}
+.drawer-tab::after{content:'';position:absolute;bottom:-2px;left:-2px;right:-2px;height:3px;background:var(--cream);}
+.drawer-rule{height:3px;background:var(--cream);border-top:1.5px solid var(--hairline);flex:1;align-self:flex-end;}
+.drawer-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px;}
+.drawer-title{font-family:'Noto Serif Kannada',serif;font-size:25px;font-weight:700;color:var(--ink);line-height:1.15;}
+.drawer-kannada{font-family:'Inter',sans-serif;font-size:11px;color:var(--ink-dim);margin-top:4px;letter-spacing:.04em;}
+
+.session-strip{display:flex;align-items:center;gap:10px;background:rgba(234,225,207,.1);border:1px solid rgba(234,225,207,.18);border-radius:6px;padding:8px 14px;color:var(--cream);}
+.user-badge{font-size:12px;font-family:'Inter',sans-serif;}
+.user-badge b{color:var(--gold);font-family:'JetBrains Mono',monospace;}
+.btn-toggle-catalog{background:var(--paper);color:var(--navy);border:1px solid var(--cream);padding:6px 12px;border-radius:4px;font-size:11.5px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;transition:all .15s;}
+.btn-toggle-catalog:hover{background:var(--navy);color:var(--cream);}
+.btn-logout{background:transparent;border:1px solid rgba(234,225,207,.3);color:var(--cream);padding:5px 10px;border-radius:3px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
+.btn-logout:hover{background:var(--brick);border-color:var(--brick);color:#fff;}
+
+/* LOGIN SCREEN */
+.login-screen{max-width:480px;margin:40px auto;background:var(--cream);border:2px solid var(--hairline);border-radius:6px;padding:32px 28px;box-shadow:0 8px 30px rgba(0,0,0,.35);position:relative;}
+.login-header{text-align:center;margin-bottom:24px;border-bottom:1.5px solid var(--hairline);padding-bottom:18px;}
+.login-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:6px;}
+.login-title{font-family:'Noto Serif Kannada',serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.login-sub{font-size:12.5px;color:var(--ink-dim);}
+
+/* MAIN APP GRID */
+.app-screen{display:none;}
+.app-screen.show{display:block;}
+.grid{display:grid;grid-template-columns:1fr;gap:24px;align-items:start;transition:all .3s;}
+.grid.catalog-open{grid-template-columns:460px 1fr;}
+@media(max-width:960px){.grid.catalog-open{grid-template-columns:1fr;}}
+
+/* LEFT: INDEX CARD (UPLOAD & PRE-CHECK) */
+.card-scaffold{position:relative;padding-bottom:8px;padding-right:6px;max-width:680px;margin:0 auto;width:100%;transition:all .3s;}
+.grid.catalog-open .card-scaffold{max-width:100%;margin:0;}
+.card-scaffold::before{content:'';position:absolute;inset:8px -6px -6px 10px;border-radius:5px;background-color:var(--cream-dark);background-image:radial-gradient(circle,var(--rule) 1px,transparent 1px);background-size:11px 11px;border:1.5px solid var(--rule);z-index:0;}
+.index-card{position:relative;z-index:1;background:var(--cream);border:1.5px solid var(--hairline);border-radius:4px;padding:24px 22px 22px;background-image:repeating-linear-gradient(transparent,transparent 27px,var(--hairline-lt) 27px,var(--hairline-lt) 28px);}
+.punch-hole{position:absolute;top:22px;left:-13px;width:26px;height:26px;border-radius:50%;background:var(--navy);border:2px solid var(--hairline);box-shadow:inset 0 2px 4px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.25);z-index:3;}
+.card-topbar{display:flex;align-items:center;justify-content:space-between;padding-left:18px;padding-bottom:12px;margin-bottom:16px;border-bottom:2px solid var(--navy);}
+.card-heading{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--navy);letter-spacing:.05em;text-transform:uppercase;}
+.card-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);background:var(--cream-dark);border:1px solid var(--hairline);border-radius:3px;padding:2px 7px;}
+
+/* PRE-CHECK SEARCH SECTION */
+.precheck-box{background:var(--paper);border:1.5px solid var(--hairline);border-radius:4px;padding:12px 14px;margin-bottom:16px;}
+.precheck-title{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--navy);font-weight:700;margin-bottom:6px;letter-spacing:.06em;}
+.precheck-row{display:flex;gap:6px;}
+.precheck-input{flex:1;background:var(--cream);border:1px solid var(--hairline);border-radius:3px;padding:8px 10px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--ink);outline:none;}
+.precheck-input:focus{border-color:var(--navy);}
+.btn-precheck{background:var(--navy);color:var(--cream);border:none;border-radius:3px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-precheck:hover{background:var(--navy-dim);}
+
+.precheck-result{display:none;margin-top:10px;padding:10px 12px;border-radius:4px;font-size:12px;line-height:1.5;}
+.precheck-result.found{display:block;background:var(--gold-soft);border:1px solid var(--gold);color:#7A5C20;}
+.precheck-result.new{display:block;background:var(--moss-soft);border:1px solid var(--moss);color:var(--moss);}
+
+/* FILE TYPES & DROPZONE */
+.filetypes{display:flex;gap:7px;margin-bottom:10px;}
+.filetype{flex:1;border:1.5px solid var(--hairline);background:var(--paper);border-radius:4px;padding:8px 6px;text-align:center;cursor:pointer;color:var(--ink-dim);font-size:11px;font-family:'Inter',sans-serif;transition:all .14s;}
+.filetype svg{display:block;margin:0 auto 4px;width:16px;height:16px;stroke:var(--ink-dim);}
+.filetype.active{border-color:var(--navy);background:var(--navy);color:var(--cream);}
+.filetype.active svg{stroke:var(--cream);}
+.dropzone{border:1.5px dashed var(--hairline);border-radius:4px;padding:14px;text-align:center;margin-bottom:12px;color:var(--ink-dim);font-size:12px;cursor:pointer;background:var(--paper);transition:all .14s;}
+.dropzone:hover{border-color:var(--navy);}
+.dropzone.filled{border-style:solid;border-color:var(--moss);background:var(--moss-soft);color:var(--moss);}
+.dropzone .fname{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:4px;color:inherit;}
+
+/* FORM FIELDS */
+label.field{display:block;margin-bottom:11px;}
+label.field .lab{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+input[type=text],input[type=password],select{width:100%;background:var(--paper);border:1.5px solid var(--hairline);border-radius:4px;padding:8px 10px;color:var(--ink);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .14s,box-shadow .14s;}
+input[type=text]:focus,input[type=password]:focus,select:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(32,42,60,.1);}
+input.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+
+/* BUTTONS & NOTICES */
+#autofillBtn{display:block;width:100%;background:var(--paper);color:var(--navy);border:1.5px solid var(--navy);border-radius:4px;padding:9px;font-family:'Fraunces',serif;font-weight:600;font-size:12.5px;cursor:pointer;margin-bottom:8px;transition:all .14s;}
+#autofillBtn:hover:not(:disabled){background:var(--navy);color:var(--cream);}
+#autofillBtn:disabled{opacity:.55;cursor:not-allowed;}
+button.submit{width:100%;background:var(--navy);color:var(--cream);border:none;border-radius:4px;padding:12px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-top:4px;transition:background .14s;}
+button.submit:hover{background:var(--navy-dim);}
+
+.notice{display:none;margin-top:12px;border-radius:4px;padding:12px 14px;font-size:12.5px;line-height:1.5;position:relative;}
+.notice.show{display:block;}
+.notice .stamp-tag{font-family:'Fraunces',serif;font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;display:inline-block;padding:2px 8px;border-radius:2px;margin-bottom:5px;}
+.notice.ok{background:var(--moss-soft);border:1.5px solid var(--moss);color:var(--moss);}
+.notice.ok .stamp-tag{background:var(--moss);color:#fff;}
+.notice.dup{background:var(--brick-soft);border:1.5px solid var(--brick);color:var(--brick);}
+.notice.dup .stamp-tag{background:var(--brick);color:#fff;}
+.notice.warn{background:var(--gold-soft);border:1.5px solid var(--gold);color:#7A5C20;}
+.notice.warn .stamp-tag{background:var(--gold);color:#fff;}
+
+/* TITLE CHIPS */
+.title-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:-4px;margin-bottom:10px;}
+.title-chip{background:var(--paper);border:1px solid var(--hairline);border-radius:3px;padding:3px 7px;font-family:'Noto Serif Kannada',serif;font-size:11px;color:var(--navy);cursor:pointer;transition:all .14s;}
+.title-chip:hover{background:var(--navy);color:var(--cream);}
+
+/* RIGHT: CATALOG PANEL (HIDDEN BY DEFAULT, TOGGLED BY BUTTON) */
+.catalog-panel{background:var(--cream);border:1.5px solid var(--hairline);border-radius:4px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+.grid.catalog-open .catalog-panel{display:flex;}
+.catalog-topbar{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.catalog-heading{display:flex;align-items:center;gap:8px;font-family:'Noto Serif Kannada','Fraunces',serif;font-size:14px;font-weight:700;color:var(--cream);letter-spacing:.04em;}
+.catalog-heading .idx{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(234,225,207,.45);border:1px solid rgba(234,225,207,.18);border-radius:3px;padding:2px 6px;}
+.search-bar input{background:rgba(255,255,255,.07);border:1px solid rgba(234,225,207,.2);border-radius:4px;padding:8px 12px;color:var(--cream);font-size:12px;font-family:'Inter',sans-serif;outline:none;width:220px;}
+.search-bar input:focus{border-color:var(--gold);background:rgba(255,255,255,.12);}
+
+.ledger-wrap{flex:1;max-height:640px;overflow-y:auto;}
+.ledger-entry{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;border-bottom:1px solid var(--hairline-lt);transition:background .12s;}
+.ledger-entry:hover{background:var(--paper);}
+.ledger-main{flex:1;min-width:0;}
+.ledger-title{font-family:'Noto Serif Kannada',serif;font-weight:600;font-size:14.5px;color:var(--navy);margin-bottom:4px;line-height:1.4;}
+.ledger-sub{font-size:12px;color:var(--ink-mid);display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.ledger-sub span b{color:var(--ink);font-weight:500;}
+.edition-count-badge{background:var(--gold-soft);border:1px solid var(--gold);color:#7A5C20;font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 6px;border-radius:3px;font-weight:600;}
+.isbn-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);background:var(--cream-mid);border:1px solid var(--hairline);padding:1px 5px;border-radius:2px;}
+.status-pill{font-size:9.5px;font-family:'JetBrains Mono',monospace;padding:2px 6px;border-radius:3px;font-weight:600;}
+.status-pill.progress{background:#fff3d4;border:1px solid var(--gold);color:#825a07;}
+.status-pill.done{background:var(--moss-soft);border:1px solid var(--moss);color:var(--moss);}
+
+.btn-details{background:var(--paper);border:1.5px solid var(--navy);color:var(--navy);padding:6px 12px;border-radius:3px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .14s;}
+.btn-details:hover{background:var(--navy);color:var(--cream);}
+.btn-delete{background:transparent;border:1px solid var(--brick);color:var(--brick);padding:6px 8px;border-radius:3px;font-size:10.5px;cursor:pointer;margin-left:6px;}
+.btn-delete:hover{background:var(--brick);color:#fff;}
+
+/* MODAL: VIEW DETAILS & UPLOAD LATER */
+.modal-overlay{position:fixed;inset:0;background:rgba(18,24,36,.75);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--cream);border:2px solid var(--navy);border-radius:6px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 12px 36px rgba(0,0,0,.45);position:relative;}
+.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:18px;color:var(--ink-dim);cursor:pointer;font-weight:700;}
+.modal-title{font-family:'Noto Serif Kannada',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.3;}
+.modal-author{font-size:13px;color:var(--ink-mid);margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid var(--hairline);}
+.modal-editions-title{font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.modal-edition-card{background:var(--paper);border:1px solid var(--hairline);border-radius:4px;padding:12px 14px;margin-bottom:10px;font-size:12px;line-height:1.5;}
+.modal-edition-card b{color:var(--navy);}
+
+/* UPLOAD FILE LATER BUTTONS & BADGES */
+.btn-upload-later{background:var(--gold-soft);border:1.5px solid var(--gold);color:#7A5C20;padding:6px 12px;border-radius:3px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .14s;margin-right:4px;}
+.btn-upload-later:hover{background:var(--gold);color:#fff;}
+.btn-upload-later-sm{background:var(--navy);color:var(--cream);border:none;border-radius:3px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;transition:all .14s;display:inline-flex;align-items:center;gap:4px;}
+.btn-upload-later-sm:hover{background:var(--navy-dim);}
+.btn-upload-later-sm.secondary{background:var(--paper);border:1px solid var(--navy);color:var(--navy);}
+.btn-upload-later-sm.secondary:hover{background:var(--navy);color:var(--cream);}
+.file-attached-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--moss);background:var(--moss-soft);border:1px solid var(--moss);padding:2px 7px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;font-weight:600;}
+.modal-dropzone{border:1.5px dashed var(--navy);border-radius:4px;padding:22px;text-align:center;margin:14px 0;color:var(--navy);font-size:12.5px;cursor:pointer;background:var(--paper);transition:all .14s;}
+.modal-dropzone:hover{background:var(--cream-mid);}
+.modal-dropzone.filled{border-style:solid;border-color:var(--moss);background:var(--moss-soft);color:var(--moss);}
+
+/* OCR progress */
+.ocr-progress{display:none;margin-bottom:10px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:4px;padding:10px 12px;font-size:12px;color:#7A5C20;}
+.ocr-progress.show{display:block;}
+.ocr-bar-wrap{height:4px;background:rgba(168,130,60,.2);border-radius:2px;margin-top:6px;overflow:hidden;}
+.ocr-bar{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ==================== 1. LOGIN SCREEN ==================== -->
+  <div id="loginScreen" class="login-screen" style="max-width:540px;">
+    <div class="login-header">
+      <div class="login-eyebrow">NudiKosha Digital Library Network</div>
+      <div class="login-title">ನುಡಿಕೋಶ ಅಧಿಕೃತ ಲಾಗಿನ್</div>
+      <div class="login-sub">NudiKosha (ನುಡಿಕೋಶ) College & School Portal</div>
+    </div>
+
+    <!-- TABS: LOG IN vs SIGN UP vs RESET PASSWORD -->
+    <div style="display:flex;margin-bottom:20px;border:1.5px solid var(--navy);border-radius:4px;overflow:hidden;" id="authTabs">
+      <button type="button" id="tabLogin" style="flex:1;padding:10px 4px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:var(--navy);color:var(--cream);border:none;cursor:pointer;">
+        🔑 Log In
+      </button>
+      <button type="button" id="tabSignUp" style="flex:1;padding:10px 4px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink-mid);border:none;cursor:pointer;border-left:1.5px solid var(--navy);">
+        📝 Sign Up
+      </button>
+      <button type="button" id="tabReset" style="flex:1;padding:10px 4px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink-mid);border:none;cursor:pointer;border-left:1.5px solid var(--navy);">
+        🔐 Reset Password
+      </button>
+    </div>
+
+    <form id="loginForm" autocomplete="off">
+      <label class="field">
+        <span class="lab">Select College / University / School in Karnataka *</span>
+        <select id="loginCollegeSelect">
+          <option value="" disabled selected>-- Select Your College / University / School --</option>
+          <optgroup label="🏛️ Universities & Public Higher Ed Institutions">
+            <option value="University of Mysore">University of Mysore (ಮೈಸೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
+            <option value="Bangalore University">Bangalore University (ಬೆಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Visvesvaraya Technological University (VTU)">VTU Belagavi (ವಿಶ್ವೇಶ್ವರಯ್ಯ ತಾಂತ್ರಿಕ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Karnatak University Dharwad">Karnatak University Dharwad (ಕರ್ನಾಟಕ ವಿ.ವಿ ಧಾರವಾಡ)</option>
+            <option value="Mangalore University">Mangalore University (ಮಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ)</option>
+            <option value="Kannada University Hampi">Kannada University Hampi (ಕನ್ನಡ ವಿಶ್ವವಿದ್ಯಾಲಯ ಹಂಪಿ)</option>
+            <option value="Tumkur University">Tumkur University (ತುಮಕೂರು ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Kuvempu University Shivamogga">Kuvempu University (ಶಿವಮೊಗ್ಗ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Gulbarga University Kalaburagi">Gulbarga University (ಗುಲ್ಬರ್ಗಾ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Davangere University">Davangere University (ದಾವಣಗೆರೆ ವಿಶ್ವವಿದ್ಯಾಲಯ)</option>
+            <option value="Rani Channamma University Belagavi">Rani Channamma University Belagavi</option>
+            <option value="Vijayanagara Sri Krishnadevaraya University">Vijayanagara Sri Krishnadevaraya Univ Ballari</option>
+          </optgroup>
+          <optgroup label="🏫 Degree Colleges & Government First Grade Colleges (GFGC)">
+            <option value="Government First Grade College Hassan">GFGC Hassan (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಹಾಸನ)</option>
+            <option value="Government First Grade College Mandya">GFGC Mandya (ಸರ್ಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು ಮಂಡ್ಯ)</option>
+            <option value="Government First Grade College Mysuru">GFGC Mysuru (ಮೈಸೂರು)</option>
+            <option value="Government First Grade College Belagavi">GFGC Belagavi (ಬೆಳಗಾವಿ)</option>
+            <option value="Government First Grade College Mangaluru">GFGC Mangaluru (ಮಂಗಳೂರು)</option>
+            <option value="Maharani Science College Mysuru">Maharani Science College Mysuru</option>
+            <option value="Central College Bengaluru">Central College Bengaluru</option>
+          </optgroup>
+          <optgroup label="🎓 Engineering & Professional Institutes">
+            <option value="RV College of Engineering (RVCE)">RV College of Engineering (RVCE Bengaluru)</option>
+            <option value="BMS College of Engineering (BMSCE)">BMS College of Engineering (BMSCE)</option>
+            <option value="MSRIT Ramaiah Institute of Technology">MSRIT Ramaiah Institute of Tech Bengaluru</option>
+            <option value="Shridevi Institute of Engineering & Technology">Shridevi Institute of Engg (SIET Tumakuru)</option>
+            <option value="SJCE JSS Science and Tech Mysuru">SJCE JSS Science & Tech Mysuru</option>
+            <option value="NITK Surathkal">NITK Surathkal (Kannada Research)</option>
+            <option value="Chennai Institute of Technology (CIT)">CIT Chennai (Kannada Studies)</option>
+          </optgroup>
+          <optgroup label="🎒 High Schools & Pre-University Colleges (PUC)">
+            <option value="Government Boys High School Hassan">Government Boys High School Hassan</option>
+            <option value="Government Girls PU College Mysuru">Government Girls PU College Mysuru</option>
+            <option value="Morarji Desai Residential School Karnataka">Morarji Desai Residential School</option>
+            <option value="Kendriya Vidyalaya Karnataka Network">Kendriya Vidyalaya Karnataka Network</option>
+          </optgroup>
+          <option value="__OTHER__">✍️ Other Karnataka Institution / School / College (Enter Custom Name)</option>
+        </select>
+      </label>
+
+      <label class="field" id="customCollegeWrap" style="display:none;">
+        <span class="lab">Enter Institution Name *</span>
+        <input type="text" id="loginCustomCollege" placeholder="e.g. Government PU College, Channarayapatna">
+      </label>
+
+      <label class="field" id="deptFieldWrap" style="display:none;">
+        <span class="lab">Department / Wing *</span>
+        <input type="text" id="loginDept" placeholder="e.g. Kannada Studies / Central Library" value="Kannada Studies">
+      </label>
+
+      <label class="field" id="passFieldWrap">
+        <span class="lab" id="passLabel">Institution Account Password *</span>
+        <input type="password" id="loginPassword" name="inst_auth_password" autocomplete="new-password" placeholder="Enter password" value="">
+      </label>
+
+      <!-- RESET PASSWORD FIELDS WRAPPER -->
+      <div id="resetFieldsWrap" style="display:none;">
+        <label class="field">
+          <span class="lab">1. Old / Current Password *</span>
+          <input type="password" id="loginOldPassword" name="inst_auth_old_pass" autocomplete="new-password" placeholder="Enter your old/current password" value="">
+        </label>
+        <label class="field">
+          <span class="lab">2. New Password *</span>
+          <input type="password" id="loginNewPassword" name="inst_auth_new_pass" autocomplete="new-password" placeholder="Enter new password (min 3 characters)" value="">
+        </label>
+        <label class="field">
+          <span class="lab">3. Confirm New Password *</span>
+          <input type="password" id="loginConfirmPassword" name="inst_auth_confirm_pass" autocomplete="new-password" placeholder="Re-enter new password to confirm" value="">
+        </label>
+      </div>
+
+      <button type="submit" class="submit" id="authSubmitBtn" style="margin-top:12px;">🔒 Log In to Library Portal</button>
+      <div id="loginErr" class="notice warn" style="margin-top:12px;"></div>
+    </form>
+  </div>
+
+  <!-- ==================== 2. MAIN APP SCREEN ==================== -->
+  <div id="appScreen" class="app-screen">
+    <header class="page-header">
+      <div class="drawer-brand">
+        <div class="drawer-tab">
+          <div class="drawer-eyebrow">NudiKosha Portal</div>
+          <div class="drawer-title">ನುಡಿಕೋಶ</div>
+          <div class="drawer-kannada">NudiKosha (ನುಡಿಕೋಶ) Library Network</div>
+        </div>
+        <div class="drawer-rule"></div>
+      </div>
+      <div class="session-strip">
+        <div class="user-badge">College: <b id="currCollegeBadge">University of Mysore</b></div>
+        <button type="button" class="btn-toggle-catalog" id="btnToggleMyUploadings" style="background:var(--gold-soft);border-color:var(--gold);color:#7A5C20;font-weight:700;">📤 My Uploadings (<span id="myUploadsBadgeCount">0</span>)</button>
+        <button type="button" class="btn-toggle-catalog" id="btnToggleCatalog">📚 View Catalog Index</button>
+        <button type="button" class="btn-toggle-catalog" id="btnOpenChangePassModal" style="background:var(--paper);border-color:var(--navy);color:var(--navy);">🔐 Change Password</button>
+        <button type="button" class="btn-logout" id="btnLogout">Logout</button>
+      </div>
+    </header>
+
+    <div class="grid" id="mainGrid">
+      <!-- LEFT: PRE-CHECK SEARCH & UPLOAD CARD -->
+      <div class="card-scaffold">
+        <div class="punch-hole"></div>
+        <div class="index-card">
+          <div class="card-topbar">
+            <span class="card-heading">Index & Upload Book</span>
+            <span class="card-num">01</span>
+          </div>
+
+          <!-- STEP 1: PRE-CHECK SEARCH -->
+          <div class="precheck-box">
+            <div class="precheck-title">🔍 Step 1: Check if book is already in library</div>
+            <div class="precheck-row">
+              <input type="text" id="precheckQuery" class="precheck-input" placeholder="Search ISBN, Title, Author, or Book ID...">
+              <button type="button" id="btnPrecheck" class="btn-precheck">Check</button>
+            </div>
+            <div id="precheckResult" class="precheck-result"></div>
+          </div>
+
+          <!-- STEP 2: UPLOAD & FORM -->
+          <div class="filetypes">
+            <div class="filetype active" data-type="pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M8.5 17v-4h1.3a1.3 1.3 0 0 1 0 2.6H8.5"/></svg>
+              PDF File
+            </div>
+            <div class="filetype" data-type="scan">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="1"/><path d="M8 6V4h8v2"/><circle cx="12" cy="12.5" r="3.2"/></svg>
+              Scan / Photo
+            </div>
+            <div class="filetype" data-type="txt">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+              Text File
+            </div>
+          </div>
+
+          <div class="dropzone" id="dropzone">
+            <b>Tap to choose book file</b> (Optional)
+            <div style="font-size:11px;color:var(--ink-dim);margin-top:2px;">Scanning takes time? You can save metadata now & upload file later!</div>
+          </div>
+          <input type="file" id="fileInput" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.txt">
+
+          <div class="ocr-progress" id="ocrProgress">
+            <span id="ocrMsg">Processing...</span>
+            <div class="ocr-bar-wrap"><div class="ocr-bar" id="ocrBar"></div></div>
+          </div>
+
+          <button type="button" id="autofillBtn">✨ Auto-fill with AI (OCR from file)</button>
+          <p class="hint" id="autofillHint">Upload file above to auto-read Kannada metadata, or type details directly below.</p>
+
+          <label class="field">
+            <span class="lab">Subject Category (for Book ID)</span>
+            <select id="bookCategory">
+              <option value="LIT">Literature / ಸಾಹಿತ್ಯ (KN-LIT)</option>
+              <option value="NOV">Novel / ಕಾದಂಬರಿ (KN-NOV)</option>
+              <option value="POE">Poetry / ಕಾವ್ಯ (KN-POE)</option>
+              <option value="FOL">Folklore / ಜನಪದ (KN-FOL)</option>
+              <option value="HIS">History & Culture / ಇತಿಹಾಸ (KN-HIS)</option>
+              <option value="SCI">Science & Tech / ವಿಜ್ಞಾನ (KN-SCI)</option>
+              <option value="GEN">General / ಸಾಮಾನ್ಯ (KN-GEN)</option>
+            </select>
+          </label>
+
+          <div class="row2">
+            <label class="field">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span class="lab" style="margin-bottom:0;">Book ID *</span>
+                <button type="button" id="btnAutoGenerateId" style="background:var(--navy);color:var(--cream);border:none;border-radius:3px;padding:3px 8px;font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;font-weight:600;">⚡ Auto-Generate ID</button>
+              </div>
+              <input type="text" class="mono" id="bookId" placeholder="e.g. KN-LIT-0008 (or auto-generated)">
+            </label>
+            <label class="field"><span class="lab">ISBN (optional)</span><input type="text" class="mono" id="mIsbn" placeholder="978-81-xxxx-xxx-x"></label>
+          </div>
+
+          <div class="row2">
+            <label class="field"><span class="lab">Title (Kannada) *</span><input type="text" id="mTitle" placeholder="ಪುಸ್ತಕದ ಹೆಸರು (ಕನ್ನಡ)"></label>
+            <label class="field"><span class="lab">Title (English Letters)</span><input type="text" id="mTitleEnglish" placeholder="Book title in English letters (e.g. Malegalalli Madumagalu)"></label>
+          </div>
+          <div id="titleSuggestions" class="title-suggestions" style="display:none;"></div>
+
+          <div class="row2">
+            <label class="field"><span class="lab">Author *</span><input type="text" id="mAuthor" placeholder="Author name"></label>
+            <label class="field"><span class="lab">Edition *</span><input type="text" id="mEdition" placeholder="e.g. 1st edition, 2nd edition"></label>
+          </div>
+
+          <div class="row2">
+            <label class="field"><span class="lab">Publication Year *</span><input type="text" id="mYear" placeholder="2021"></label>
+            <label class="field"><span class="lab">Total Pages *</span><input type="text" id="mPages" placeholder="248"></label>
+          </div>
+
+          <!-- COPYRIGHT STATUS SECTION -->
+          <div style="background:var(--paper);border:1.5px solid var(--hairline);border-radius:5px;padding:16px;margin:16px 0;">
+            <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">
+              📜 Copyright Status *
+            </div>
+            <div style="font-size:11.5px;color:var(--ink-dim);margin-bottom:12px;">Record the copyright status of this book based on the imprint page.</div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;" id="copyrightOptions">
+              <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;background:var(--cream);padding:8px 12px;border:1px solid var(--hairline);border-radius:4px;">
+                <input type="radio" name="copyrightStatus" value="public_domain">
+                <span>🟢 <b>Public Domain / Non-Copyrighted</b></span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;background:var(--cream);padding:8px 12px;border:1px solid var(--hairline);border-radius:4px;">
+                <input type="radio" name="copyrightStatus" value="copyrighted" checked>
+                <span>🔴 <b>Copyrighted</b></span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;background:var(--cream);padding:8px 12px;border:1px solid var(--hairline);border-radius:4px;">
+                <input type="radio" name="copyrightStatus" value="permission_available">
+                <span>🔵 <b>Permission Available</b></span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;background:var(--cream);padding:8px 12px;border:1px solid var(--hairline);border-radius:4px;">
+                <input type="radio" name="copyrightStatus" value="unknown">
+                <span>⚪ <b>Copyright Status Unknown</b></span>
+              </label>
+            </div>
+
+            <!-- CONDITIONAL BOX 1: COPYRIGHTED (🔴) -->
+            <div id="boxCopyrighted" style="display:block;background:var(--brick-soft);border:1px solid var(--brick);border-radius:4px;padding:12px 14px;">
+              <label class="field" style="margin-bottom:8px;">
+                <span class="lab">Copyright Holder Shown in Book *</span>
+                <input type="text" id="cHolder" placeholder="e.g. Karnataka University Press">
+              </label>
+              <label class="field" style="margin-bottom:8px;">
+                <span class="lab">Copyright Year *</span>
+                <input type="text" id="cYear" placeholder="e.g. 2024">
+              </label>
+              <label class="field" style="margin-bottom:8px;">
+                <span class="lab">Copyright Information *</span>
+                <input type="text" id="cNotice" placeholder="e.g. © 2024 Karnataka University Press. All rights reserved.">
+              </label>
+              <div style="font-size:11.5px;color:var(--brick);margin:8px 0;line-height:1.45;font-weight:600;">
+                ⚠️ This book is marked as copyrighted. Permission may be required before digitizing, sharing, or using the content.
+              </div>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-mid);margin-top:6px;cursor:pointer;">
+                <input type="checkbox" id="chkCopyrightedConfirm">
+                <span>I have checked the copyright information provided in the book.</span>
+              </label>
+            </div>
+
+            <!-- CONDITIONAL BOX 2: PUBLIC DOMAIN (🟢) -->
+            <div id="boxPublicDomain" style="display:none;background:var(--moss-soft);border:1px solid var(--moss);border-radius:4px;padding:12px 14px;">
+              <div style="font-size:12.5px;color:var(--moss);font-weight:600;margin-bottom:8px;">
+                🟢 This book has been marked as Public Domain / Non-Copyrighted by the uploader.
+              </div>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-mid);cursor:pointer;">
+                <input type="checkbox" id="chkPublicDomainConfirm">
+                <span>I have verified the copyright status of this book.</span>
+              </label>
+            </div>
+
+            <!-- CONDITIONAL BOX 3: PERMISSION AVAILABLE (🔵) -->
+            <div id="boxPermission" style="display:none;background:var(--gold-soft);border:1px solid var(--gold);border-radius:4px;padding:12px 14px;">
+              <label class="field" style="margin-bottom:8px;">
+                <span class="lab">Permission Holder / Organization *</span>
+                <input type="text" id="pOrganization" placeholder="e.g. Karnataka University Press">
+              </label>
+              <label class="field" style="margin-bottom:8px;">
+                <span class="lab">Permission Reference (Optional)</span>
+                <input type="text" id="pRef" placeholder="e.g. PERM-2026/04">
+              </label>
+              <div style="font-size:12px;color:#7A5C20;font-weight:600;margin-top:6px;">
+                🔵 Permission information has been provided by the college.
+              </div>
+            </div>
+
+            <!-- CONDITIONAL BOX 4: UNKNOWN (⚪) -->
+            <div id="boxUnknown" style="display:none;background:var(--cream-dark);border:1px solid var(--hairline);border-radius:4px;padding:12px 14px;">
+              <div style="font-size:12.5px;color:var(--ink-mid);font-weight:600;">
+                ⚪ Copyright status has not been verified.
+              </div>
+              <div style="font-size:11.5px;color:var(--ink-dim);margin-top:4px;font-family:'JetBrains Mono',monospace;">
+                <b>COPYRIGHT STATUS: UNKNOWN</b>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="submit" id="submitBtn">Save & Continue</button>
+          <div class="notice" id="notice"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CATALOG INDEX (HIDDEN BY DEFAULT) -->
+      <div class="catalog-panel" id="catalogPanel">
+        <div class="catalog-topbar">
+          <div class="catalog-heading"><span class="idx">02</span>ಕನ್ನಡ ಪುಸ್ತಕ ಸೂಚ್ಯಂಕ (Catalog Index)</div>
+          <div class="search-bar"><input type="text" id="searchBox" placeholder="Search Title, Author, ISBN, ID..."></div>
+        </div>
+        <div class="ledger-wrap" id="ledgerList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW BOOK DETAILS -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="btnCloseModal">✕</button>
+      <div class="modal-title" id="modalTitle">ಪುಸ್ತಕದ ಹೆಸರು</div>
+      <div class="modal-author" id="modalMeta">Author · ID · ISBN</div>
+      <div class="modal-editions-title">Registered Editions & Status</div>
+      <div id="modalEditionsList"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: MY UPLOADINGS DASHBOARD -->
+  <div class="modal-overlay" id="myUploadingsModal">
+    <div class="modal-box" style="max-width:720px;">
+      <button type="button" class="modal-close" id="btnCloseMyUploadings">✕</button>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px;">
+        📤 My Uploadings Dashboard
+      </div>
+      <div style="font-size:13px;color:var(--ink-mid);margin-bottom:16px;">
+        Institution: <b style="color:var(--navy);font-size:14px;" id="myUploadingsCollegeName">University of Mysore</b>
+      </div>
+
+      <!-- METRICS CARDS -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:var(--paper);border:1.5px solid var(--navy);border-radius:5px;padding:12px;text-align:center;">
+          <div style="font-size:10.5px;color:var(--ink-dim);text-transform:uppercase;font-weight:700;letter-spacing:.05em;">Total Associated Books</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--navy);" id="metricTotalCount">0</div>
+        </div>
+        <div style="background:var(--moss-soft);border:1.5px solid var(--moss);border-radius:5px;padding:12px;text-align:center;">
+          <div style="font-size:10.5px;color:var(--moss);text-transform:uppercase;font-weight:700;letter-spacing:.05em;">Digitalization Submitted</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--moss);" id="metricSubmittedCount">0</div>
+        </div>
+        <div style="background:var(--gold-soft);border:1.5px solid var(--gold);border-radius:5px;padding:12px;text-align:center;">
+          <div style="font-size:10.5px;color:#7A5C20;text-transform:uppercase;font-weight:700;letter-spacing:.05em;">Upload Pending</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#7A5C20;" id="metricPendingCount">0</div>
+        </div>
+      </div>
+
+      <!-- SEARCH BAR INSIDE MY UPLOADINGS -->
+      <div style="margin-bottom:14px;">
+        <input type="text" id="myUploadingsSearch" class="precheck-input" style="width:100%;" placeholder="🔍 Search by Title or Author in your college uploadings...">
+      </div>
+
+      <!-- COLLEGE BOOKS LIST -->
+      <div id="myUploadingsList" style="display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: UPLOAD FILE LATER -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="btnCloseUploadModal">✕</button>
+      <div class="modal-title" style="font-size:18px;">📤 Upload Book File for Saved Catalog Record</div>
+      <div style="font-size:12.5px;color:var(--ink-mid);margin-bottom:14px;margin-top:4px;" id="uploadModalBookInfo">Target Book Details</div>
+      
+      <div style="background:var(--paper);border:1.5px solid var(--hairline);border-radius:4px;padding:12px 14px;margin-bottom:14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--navy);font-weight:700;margin-bottom:4px;" id="uploadModalEditionInfo">Edition 1st edition</div>
+        <div style="font-size:12px;color:var(--ink-dim);">Attaching the file now will update the catalog record status to <b>✓ Digitized</b>.</div>
+      </div>
+
+      <div class="modal-dropzone" id="modalDropzone">
+        <b style="font-size:13px;">📁 Tap to select book file</b> or drag & drop here
+        <div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">Supports PDF (.pdf), Scans (.png, .jpg), Text (.txt)</div>
+        <div id="modalFileNameDisplay" style="font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:8px;"></div>
+      </div>
+      <input type="file" id="modalFileInput" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.txt">
+
+      <button type="button" class="submit" id="btnConfirmUploadFile" style="margin-top:8px;" disabled>Save & Complete Upload</button>
+      <div class="notice" id="uploadModalNotice"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CHANGE PASSWORD (WHEN LOGGED IN) -->
+  <div class="modal-overlay" id="changePassModal">
+    <div class="modal-box" style="max-width:460px;">
+      <button type="button" class="modal-close" id="btnCloseChangePassModal">✕</button>
+      <div class="modal-title" style="font-size:18px;">🔐 Change Account Password</div>
+      <div style="font-size:12.5px;color:var(--ink-mid);margin-bottom:14px;margin-top:4px;">
+        Institution: <b id="modalCollegeName" style="color:var(--navy);">University of Mysore</b>
+      </div>
+
+      <form id="changePassModalForm">
+        <label class="field">
+          <span class="lab">1. Old / Current Password *</span>
+          <input type="password" id="modalOldPassword" placeholder="Enter current password" required>
+        </label>
+
+        <label class="field">
+          <span class="lab">2. New Password *</span>
+          <input type="password" id="modalNewPassword" placeholder="Enter new password (min 3 chars)" required>
+        </label>
+
+        <label class="field">
+          <span class="lab">3. Confirm New Password *</span>
+          <input type="password" id="modalConfirmPassword" placeholder="Re-enter new password to confirm" required>
+        </label>
+
+        <button type="submit" class="submit" id="btnSubmitChangePassModal" style="margin-top:8px;">🔄 Change Password</button>
+        <div class="notice" id="changePassNotice" style="margin-top:12px;"></div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+</script>
+<script>
+const SEED_BOOKS = [
+  {
+    id: "KN-LIT-0007",
+    title: "ಮಲೆಗಳಲ್ಲಿ ಮದುಮಗಳು",
+    author: "Kuvempu",
+    isbn: "978-81-7074-001-2",
+    copyrightStatus: "public_domain",
+    createdByCollege: "University of Mysore",
+    date: "2026-08-10",
+    editions: [
+      { edition: "1st edition", year: "1949", pages: "720", status: "Digitalization Submitted", date: "2026-08-10", fileName: "malegalalli_vol1.pdf", fileSize: "14.2 MB", createdByCollege: "University of Mysore" },
+      { edition: "2nd edition", year: "1967", pages: "895", status: "Upload Pending", date: "2026-08-15", createdByCollege: "University of Mysore" }
+    ]
+  }
+];
+
+function loadCatalog(){
+  try{
+    const saved = JSON.parse(localStorage.getItem('kn_catalog_v6') || 'null');
+    if(Array.isArray(saved) && saved.length > 0) return saved;
+  } catch(e){}
+  return [...SEED_BOOKS];
+}
+function saveCatalog(){
+  localStorage.setItem('kn_catalog_v6', JSON.stringify(catalog));
+}
+
+let catalog = loadCatalog();
+let loggedInUser = JSON.parse(sessionStorage.getItem('kn_session') || 'null');
+
+const el = id => document.getElementById(id);
+
+// AUTH & SESSION MANAGEMENT
+const loginCollegeSelect = el('loginCollegeSelect');
+const customCollegeWrap = el('customCollegeWrap');
+const loginCustomCollege = el('loginCustomCollege');
+
+if(loginCollegeSelect){
+  loginCollegeSelect.addEventListener('change', ()=>{
+    if(loginCollegeSelect.value === '__OTHER__'){
+      if(customCollegeWrap) customCollegeWrap.style.display = 'block';
+    } else {
+      if(customCollegeWrap) customCollegeWrap.style.display = 'none';
+    }
+  });
+}
+
+const btnTypeInstitution = el('btnTypeInstitution');
+const btnTypeIndividual = el('btnTypeIndividual');
+const tabLogin = el('tabLogin');
+const tabSignUp = el('tabSignUp');
+const tabReset = el('tabReset');
+const authSubmitBtn = el('authSubmitBtn');
+const deptFieldWrap = el('deptFieldWrap');
+const passFieldWrap = el('passFieldWrap');
+const resetFieldsWrap = el('resetFieldsWrap');
+let authMode = 'login'; // 'login', 'signup', 'reset'
+
+if(tabLogin && tabSignUp && tabReset){
+  tabLogin.addEventListener('click', ()=>{
+    authMode = 'login';
+    tabLogin.style.background = 'var(--navy)';
+    tabLogin.style.color = 'var(--cream)';
+    tabSignUp.style.background = 'var(--paper)';
+    tabSignUp.style.color = 'var(--ink-mid)';
+    tabReset.style.background = 'var(--paper)';
+    tabReset.style.color = 'var(--ink-mid)';
+    if(authSubmitBtn) authSubmitBtn.textContent = '🔒 Log In to Library Portal';
+    if(deptFieldWrap) deptFieldWrap.style.display = 'none';
+    if(passFieldWrap) passFieldWrap.style.display = 'block';
+    if(resetFieldsWrap) resetFieldsWrap.style.display = 'none';
+    if(el('passLabel')) el('passLabel').textContent = 'Institution Account Password *';
+    if(el('loginErr')) el('loginErr').className = 'notice';
+  });
+
+  tabSignUp.addEventListener('click', ()=>{
+    authMode = 'signup';
+    tabSignUp.style.background = 'var(--navy)';
+    tabSignUp.style.color = 'var(--cream)';
+    tabLogin.style.background = 'var(--paper)';
+    tabLogin.style.color = 'var(--ink-mid)';
+    tabReset.style.background = 'var(--paper)';
+    tabReset.style.color = 'var(--ink-mid)';
+    if(authSubmitBtn) authSubmitBtn.textContent = '📝 Register College & Set Unique Password';
+    if(deptFieldWrap) deptFieldWrap.style.display = 'block';
+    if(passFieldWrap) passFieldWrap.style.display = 'block';
+    if(resetFieldsWrap) resetFieldsWrap.style.display = 'none';
+    if(el('passLabel')) el('passLabel').textContent = 'Set Account Password *';
+    if(el('loginErr')) el('loginErr').className = 'notice';
+  });
+
+  tabReset.addEventListener('click', ()=>{
+    authMode = 'reset';
+    tabReset.style.background = 'var(--navy)';
+    tabReset.style.color = 'var(--cream)';
+    tabLogin.style.background = 'var(--paper)';
+    tabLogin.style.color = 'var(--ink-mid)';
+    tabSignUp.style.background = 'var(--paper)';
+    tabSignUp.style.color = 'var(--ink-mid)';
+    if(authSubmitBtn) authSubmitBtn.textContent = '🔐 Reset & Change Password';
+    if(deptFieldWrap) deptFieldWrap.style.display = 'none';
+    if(passFieldWrap) passFieldWrap.style.display = 'none';
+    if(resetFieldsWrap) resetFieldsWrap.style.display = 'block';
+    if(el('loginErr')) el('loginErr').className = 'notice';
+  });
+}
+
+function resetAuthLoginForm(){
+  if(loginCollegeSelect) loginCollegeSelect.value = '';
+  if(loginCustomCollege) loginCustomCollege.value = '';
+  if(customCollegeWrap) customCollegeWrap.style.display = 'none';
+
+  if(el('loginPassword')) el('loginPassword').value = '';
+  if(el('loginOldPassword')) el('loginOldPassword').value = '';
+  if(el('loginNewPassword')) el('loginNewPassword').value = '';
+  if(el('loginConfirmPassword')) el('loginConfirmPassword').value = '';
+  if(el('loginDept')) el('loginDept').value = 'Kannada Studies';
+
+  const errBox = el('loginErr');
+  if(errBox) { errBox.className = 'notice'; errBox.innerHTML = ''; }
+}
+
+function initSession(){
+  const loginScreen = el('loginScreen');
+  const appScreen = el('appScreen');
+  const badge = el('currCollegeBadge');
+
+  if(loggedInUser && loggedInUser.college){
+    if(loginScreen) loginScreen.style.display = 'none';
+    if(appScreen) appScreen.classList.add('show');
+    if(badge) badge.textContent = loggedInUser.college;
+    fetchCatalogFromApi();
+    renderMyUploadings('');
+  } else {
+    resetAuthLoginForm();
+    if(loginScreen) loginScreen.style.display = 'block';
+    if(appScreen) appScreen.classList.remove('show');
+  }
+}
+
+async function fetchCatalogFromApi(){
+  try {
+    const res = await fetch('/api/catalog');
+    if(res.ok){
+      const data = await res.json();
+      if(Array.isArray(data) && data.length > 0){
+        catalog = data;
+        const sBox = el('searchBox');
+        renderLedger(sBox ? sBox.value : '');
+        const btnToggle = el('btnToggleCatalog');
+        if(btnToggle) btnToggle.textContent = '📚 View Catalog Index (' + catalog.length + ' Books)';
+      }
+    }
+  } catch(e){ console.log('Using local catalog memory.'); }
+}
+
+async function performLogin(college, dept, pwd){
+  const errBox = el('loginErr');
+  if(errBox) errBox.className = 'notice';
+
+  if(!college || college.trim() === ''){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Selection Required</span><div>Please select your college / university from the dropdown list.</div>`;
+    }
+    return;
+  }
+  if(!pwd || pwd.trim() === ''){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Password Required</span><div>Please enter your account password.</div>`;
+    }
+    return;
+  }
+
+  const cleanCollege = college.trim();
+  const cleanDept = dept || 'General Library';
+  const cleanPwd = pwd.trim();
+
+  const endpoint = (authMode === 'signup') ? '/api/auth/register' : '/api/auth/login';
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ college: cleanCollege, dept: cleanDept, password: cleanPwd })
+    });
+    const data = await res.json();
+    if(data.success){
+      loggedInUser = { college: data.college, dept: data.dept, token: data.token };
+      sessionStorage.setItem('kn_session', JSON.stringify(loggedInUser));
+      resetAuthLoginForm();
+      initSession();
+      return;
+    } else {
+      if(errBox){
+        errBox.className = 'notice show warn';
+        const isDuplicate = (res.status === 409) || (data.error && data.error.toLowerCase().includes('already registered'));
+        if(isDuplicate){
+          errBox.innerHTML = `
+            <span class="stamp-tag">⚠️ Already Registered</span>
+            <div style="margin-top:4px;font-size:13px;font-weight:600;color:var(--ink);">${data.error}</div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+              <button type="button" onclick="tabLogin.click()" style="background:var(--navy);color:var(--cream);border:none;padding:7px 14px;border-radius:4px;font-size:11.5px;font-weight:700;cursor:pointer;">🔑 Go to Log In</button>
+              <button type="button" onclick="tabReset.click()" style="background:var(--paper);color:var(--navy);border:1.5px solid var(--navy);padding:7px 14px;border-radius:4px;font-size:11.5px;font-weight:700;cursor:pointer;">🔐 Change / Reset Password</button>
+            </div>
+          `;
+        } else {
+          errBox.innerHTML = `<span class="stamp-tag">Authentication Error</span><div>${data.error || 'Failed to authenticate.'}</div>`;
+        }
+      }
+      return;
+    }
+  } catch(e){}
+
+  // Local fallback session
+  loggedInUser = { college: cleanCollege, dept: cleanDept, token: 'KN_SESSION_TOKEN' };
+  sessionStorage.setItem('kn_session', JSON.stringify(loggedInUser));
+  resetAuthLoginForm();
+  initSession();
+}
+
+async function performChangePassword(college, oldPassword, newPassword, confirmPassword, targetNoticeId = 'loginErr'){
+  const errBox = el(targetNoticeId);
+  if(errBox) errBox.className = 'notice';
+
+  if(!college || college.trim() === ''){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Selection Required</span><div>Please select your college / university from the dropdown list.</div>`;
+    }
+    return;
+  }
+  if(!oldPassword){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Validation Error</span><div>Please enter your old/current password.</div>`;
+    }
+    return;
+  }
+  if(!newPassword || newPassword.length < 3){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Validation Error</span><div>Please enter a valid new password (at least 3 characters).</div>`;
+    }
+    return;
+  }
+  if(!confirmPassword){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Validation Error</span><div>Please confirm your new password.</div>`;
+    }
+    return;
+  }
+  if(newPassword !== confirmPassword){
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Validation Error</span><div>❌ New Password and Confirm Password do not match. Please re-enter.</div>`;
+    }
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ college, oldPassword, newPassword, confirmPassword })
+    });
+    const data = await res.json();
+    if(res.ok && data.success){
+      if(errBox){
+        errBox.className = 'notice show ok';
+        errBox.innerHTML = `<span class="stamp-tag">✓ Success</span><div>${data.message}</div>`;
+      }
+      if(el('loginOldPassword')) el('loginOldPassword').value = '';
+      if(el('loginNewPassword')) el('loginNewPassword').value = '';
+      if(el('loginConfirmPassword')) el('loginConfirmPassword').value = '';
+      if(el('modalOldPassword')) el('modalOldPassword').value = '';
+      if(el('modalNewPassword')) el('modalNewPassword').value = '';
+      if(el('modalConfirmPassword')) el('modalConfirmPassword').value = '';
+
+      if(targetNoticeId === 'changePassNotice'){
+        setTimeout(()=>{
+          const modal = el('changePassModal');
+          if(modal) modal.classList.remove('show');
+        }, 1800);
+      }
+      return;
+    } else {
+      if(errBox){
+        errBox.className = 'notice show warn';
+        errBox.innerHTML = `<span class="stamp-tag">Error</span><div>${data.error || 'Failed to change password.'}</div>`;
+      }
+      return;
+    }
+  } catch(e) {
+    if(errBox){
+      errBox.className = 'notice show warn';
+      errBox.innerHTML = `<span class="stamp-tag">Error</span><div>Unable to connect to server.</div>`;
+    }
+  }
+}
+
+const loginForm = el('loginForm');
+if(loginForm){
+  loginForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const selVal = loginCollegeSelect ? loginCollegeSelect.value : '';
+    const college = (selVal === '__OTHER__' && loginCustomCollege) ? loginCustomCollege.value.trim() : selVal;
+
+    if(authMode === 'reset'){
+      const oldPassword = el('loginOldPassword') ? el('loginOldPassword').value.trim() : '';
+      const newPassword = el('loginNewPassword') ? el('loginNewPassword').value.trim() : '';
+      const confirmPassword = el('loginConfirmPassword') ? el('loginConfirmPassword').value.trim() : '';
+      performChangePassword(college, oldPassword, newPassword, confirmPassword, 'loginErr');
+    } else {
+      const dept = el('loginDept') ? el('loginDept').value.trim() : 'General Library';
+      const pwd = el('loginPassword') ? el('loginPassword').value.trim() : '';
+      performLogin(college, dept, pwd);
+    }
+  });
+}
+
+// CHANGE PASSWORD MODAL (WHEN LOGGED IN) HANDLERS
+const changePassModal = el('changePassModal');
+const btnOpenChangePassModal = el('btnOpenChangePassModal');
+const btnCloseChangePassModal = el('btnCloseChangePassModal');
+const changePassModalForm = el('changePassModalForm');
+
+if(btnOpenChangePassModal){
+  btnOpenChangePassModal.addEventListener('click', ()=>{
+    if(loggedInUser && loggedInUser.college && el('modalCollegeName')){
+      el('modalCollegeName').textContent = loggedInUser.college;
+    }
+    if(el('changePassNotice')) el('changePassNotice').className = 'notice';
+    if(changePassModal) changePassModal.classList.add('show');
+  });
+}
+if(btnCloseChangePassModal){
+  btnCloseChangePassModal.addEventListener('click', ()=>{
+    if(changePassModal) changePassModal.classList.remove('show');
+  });
+}
+if(changePassModal){
+  changePassModal.addEventListener('click', (e)=>{
+    if(e.target === changePassModal) changePassModal.classList.remove('show');
+  });
+}
+if(changePassModalForm){
+  changePassModalForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const college = (loggedInUser && (loggedInUser.name || loggedInUser.college)) ? (loggedInUser.name || loggedInUser.college) : '';
+    const accType = (loggedInUser && loggedInUser.type) ? loggedInUser.type : 'institution';
+    const oldPassword = el('modalOldPassword') ? el('modalOldPassword').value.trim() : '';
+    const newPassword = el('modalNewPassword') ? el('modalNewPassword').value.trim() : '';
+    const confirmPassword = el('modalConfirmPassword') ? el('modalConfirmPassword').value.trim() : '';
+    performChangePassword(college, oldPassword, newPassword, confirmPassword, 'changePassNotice', accType);
+  });
+}
+
+const btnLogout = el('btnLogout');
+if(btnLogout){
+  btnLogout.addEventListener('click', ()=>{
+    sessionStorage.removeItem('kn_session');
+    loggedInUser = null;
+    resetAuthLoginForm();
+    initSession();
+  });
+}
+
+initSession();
+if(!loggedInUser){
+  resetAuthLoginForm();
+  setTimeout(resetAuthLoginForm, 50);
+}
+window.addEventListener('DOMContentLoaded', ()=>{ if(!loggedInUser) resetAuthLoginForm(); });
+window.addEventListener('load', ()=>{ if(!loggedInUser) resetAuthLoginForm(); });
+
+// TOGGLE CATALOG PANEL (SHOW / HIDE)
+const mainGrid = el('mainGrid');
+const btnToggleCatalog = el('btnToggleCatalog');
+let isCatalogOpen = false;
+
+btnToggleCatalog.addEventListener('click', ()=>{
+  isCatalogOpen = !isCatalogOpen;
+  if(isCatalogOpen){
+    mainGrid.classList.add('catalog-open');
+    btnToggleCatalog.textContent = '✕ Hide Catalog Index';
+    btnToggleCatalog.style.background = 'var(--navy)';
+    btnToggleCatalog.style.color = 'var(--cream)';
+  } else {
+    mainGrid.classList.remove('catalog-open');
+    btnToggleCatalog.textContent = '📚 View Catalog Index (' + catalog.length + ' Books)';
+    btnToggleCatalog.style.background = 'var(--paper)';
+    btnToggleCatalog.style.color = 'var(--navy)';
+  }
+});
+
+// NORMALIZE & SEARCH HELPERS
+function normalizeId(v){ return (v||'').trim().toUpperCase(); }
+function normalizeText(v){ return (v||'').trim().toLowerCase().replace(/[\s\-_.:,]/g, ''); }
+
+function generateNextBookId(catCode){
+  const cat = (catCode || (el('bookCategory') ? el('bookCategory').value : 'GEN')).toUpperCase();
+  const prefix = `KN-${cat}-`;
+  let maxNum = 0;
+  catalog.forEach(b => {
+    if(b.id && b.id.toUpperCase().startsWith(prefix)){
+      const numPart = parseInt(b.id.toUpperCase().replace(prefix, ''), 10);
+      if(!isNaN(numPart) && numPart > maxNum){ maxNum = numPart; }
+    }
+  });
+  return `${prefix}${String(maxNum + 1).padStart(4, '0')}`;
+}
+
+const btnAutoGenerateId = el('btnAutoGenerateId');
+const bookCategorySelect = el('bookCategory');
+if(btnAutoGenerateId){
+  btnAutoGenerateId.addEventListener('click', ()=>{
+    el('bookId').value = generateNextBookId();
+  });
+}
+if(bookCategorySelect){
+  bookCategorySelect.addEventListener('change', ()=>{
+    if(!el('bookId').value.trim() || el('bookId').value.startsWith('KN-')){
+      el('bookId').value = generateNextBookId();
+    }
+  });
+}
+
+function findBookByAny(query){
+  const q = normalizeText(query);
+  if(!q) return null;
+  return catalog.find(b => {
+    if(normalizeText(b.id).includes(q) || q.includes(normalizeText(b.id))) return true;
+    if(b.isbn && normalizeText(b.isbn).includes(q)) return true;
+    if(normalizeText(b.title).includes(q) || q.includes(normalizeText(b.title))) return true;
+    if(b.titleEnglish && (normalizeText(b.titleEnglish).includes(q) || q.includes(normalizeText(b.titleEnglish)))) return true;
+    if(normalizeText(b.author).includes(q) || q.includes(normalizeText(b.author))) return true;
+    if(b.editions && b.editions.some(e => (e.isbn && normalizeText(e.isbn).includes(q)) || (e.edition && normalizeText(e.edition).includes(q)))) return true;
+    return false;
+  });
+}
+
+function findMatchingBook(id, title, author, isbn){
+  const cleanIsbn = normalizeText(isbn);
+  if(cleanIsbn.length >= 8){
+    const byIsbn = catalog.find(b => (b.isbn && normalizeText(b.isbn) === cleanIsbn) || (b.editions && b.editions.some(e => e.isbn && normalizeText(e.isbn) === cleanIsbn)));
+    if(byIsbn) return byIsbn;
+  }
+  const cleanId = normalizeId(id);
+  if(cleanId){
+    const byId = catalog.find(b => b.id.toUpperCase() === cleanId);
+    if(byId) return byId;
+  }
+  const cleanT = normalizeText(title);
+  const cleanA = normalizeText(author);
+  if(cleanT.length >= 3 && cleanA.length >= 2){
+    const byTitleAuthor = catalog.find(b => {
+      const bt = normalizeText(b.title);
+      const ba = normalizeText(b.author);
+      return (bt.includes(cleanT) || cleanT.includes(bt)) && (ba.includes(cleanA) || cleanA.includes(ba));
+    });
+    if(byTitleAuthor) return byTitleAuthor;
+  }
+  return null;
+}
+
+// PRE-CHECK SEARCH (WITHOUT COLLEGE NAMES)
+const precheckQuery = el('precheckQuery');
+const precheckResult = el('precheckResult');
+
+el('btnPrecheck').addEventListener('click', runPrecheck);
+precheckQuery.addEventListener('keypress', (e)=>{ if(e.key==='Enter') runPrecheck(); });
+
+function closePrecheckResult(){
+  if(precheckResult){
+    precheckResult.style.display = 'none';
+    precheckResult.className = 'precheck-result';
+    precheckResult.innerHTML = '';
+  }
+}
+
+function runPrecheck(){
+  const q = precheckQuery.value.trim();
+  if(!q){
+    precheckResult.style.display = 'block';
+    precheckResult.className = 'precheck-result found';
+    precheckResult.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Please enter an ISBN, Title, Author, or Book ID to check.</span>
+        <button type="button" onclick="closePrecheckResult()" style="background:none;border:none;font-size:16px;font-weight:700;color:var(--ink-dim);cursor:pointer;" title="Close">&times;</button>
+      </div>
+    `;
+    return;
+  }
+  const existing = findBookByAny(q);
+  precheckResult.style.display = 'block';
+  if(existing){
+    precheckResult.className = 'precheck-result found';
+    const eds = existing.editions || [{ edition: existing.edition || '1st edition', year: existing.year, pages: existing.pages, status: 'Digitized' }];
+    const edListText = eds.map(e => e.edition || '1st edition').join(', ');
+    const myCollege = (loggedInUser && loggedInUser.college) ? loggedInUser.college.trim().toLowerCase() : '';
+
+    precheckResult.innerHTML = `
+      <div style="background:var(--paper);border:1.5px solid var(--navy);border-radius:5px;padding:14px;margin-bottom:8px;position:relative;">
+        <button type="button" onclick="closePrecheckResult()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:18px;font-weight:700;color:var(--ink-dim);cursor:pointer;line-height:1;" title="Close Result">&times;</button>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px;padding-right:24px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--navy);font-size:15px;">
+            ${existing.id} — ${existing.title} ${existing.titleEnglish ? `<span style="font-size:13px;color:var(--ink-dim);font-style:italic;font-weight:normal;">(${existing.titleEnglish})</span>` : ''}
+          </div>
+          <div>${getCopyrightBadgeHTML(existing)}</div>
+        </div>
+        <div style="font-size:13px;color:var(--ink-mid);margin-bottom:6px;">
+          Author: <b>${existing.author}</b> ${existing.isbn ? ` &middot; Master ISBN: <b>${existing.isbn}</b>` : ''}
+        </div>
+        <div style="font-size:12px;color:var(--navy);font-weight:600;background:var(--cream-mid);border:1px solid var(--hairline);border-radius:3px;padding:4px 8px;display:inline-block;margin-bottom:10px;">
+          📚 Available Editions: <b style="color:var(--gold);">${edListText}</b>
+        </div>
+
+        <div style="font-size:11px;font-weight:700;color:var(--ink-dim);margin-top:4px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;">Registered Editions Status & Ownership:</div>
+        ${eds.map((e, edIdx) => {
+          const isProgress = (e.status||'').includes('Progress') || (e.status||'').includes('Scanning');
+          const edCollege = (e.createdByCollege || 'Karnataka Library Network').trim();
+          const isMyCollege = (edCollege.toLowerCase() === myCollege);
+
+          return `<div style="margin-top:5px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:var(--cream);border:1px solid var(--hairline-lt);border-radius:4px;padding:8px 12px;">
+            <div>
+              • <b>${e.edition || '1st edition'}</b> (${e.year || '—'} · ${e.pages ? e.pages + ' pp' : '—'}) ${e.isbn ? `· ISBN: <code style="font-size:10.5px;">${e.isbn}</code>` : ''} — 
+              <span class="status-pill ${isProgress ? 'progress' : 'done'}">${isProgress ? '⏳ Upload Pending' : '✓ Digitized'}</span>
+              ${e.fileName ? `<span class="file-attached-tag" style="margin-left:4px;">📄 ${e.fileName}</span>` : ''}
+              <div style="font-size:11px;color:var(--ink-dim);margin-top:2px;">Reserved/Uploaded by: <b style="color:${isMyCollege ? 'var(--moss)' : 'var(--navy)'};">${edCollege}</b> ${isMyCollege ? ' (Your College)' : ''}</div>
+            </div>
+            ${(isProgress && isMyCollege) ? `<button type="button" class="btn-upload-later-sm" onclick="openUploadModal('${existing.id}', ${edIdx})">📤 Upload File Now</button>` : ''}
+          </div>`;
+        }).join('')}
+
+        <!-- RESTORED CLEAR NOTICE MESSAGE -->
+        <div style="margin-top:12px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:4px;padding:10px 12px;font-size:12px;color:#7A5C20;line-height:1.5;">
+          💡 <b>Notice:</b> This book is already registered in the Karnataka Digital Network. <b>No need to re-upload the same edition.</b> If you have a <b>DIFFERENT Edition</b> (e.g. 2nd edition, 3rd edition), click below to add it under Book ID <b>${existing.id}</b>!
+        </div>
+
+        <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--hairline);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:11.5px;color:var(--ink-dim);">Have a different edition for "${existing.title}"?</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button type="button" class="btn-upload-later-sm" style="background:var(--moss);padding:7px 13px;" onclick="prepareNewEditionForm('${existing.id}')">➕ Add New Edition to ${existing.id}</button>
+            <button type="button" class="btn-upload-later-sm secondary" style="padding:7px 12px;background:var(--paper);border:1px solid var(--navy);color:var(--navy);" onclick="closePrecheckResult()">✕ Close Result</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    el('mTitle').value = existing.title;
+    if(el('mTitleEnglish')) el('mTitleEnglish').value = existing.titleEnglish || '';
+    el('mAuthor').value = existing.author;
+    if(existing.isbn) el('mIsbn').value = existing.isbn;
+    el('bookId').value = existing.id;
+  } else {
+    precheckResult.className = 'precheck-result new';
+    precheckResult.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <b>✨ No record found for "${q}" in the library catalog.</b><br>
+          You can proceed to upload or reserve this as a brand new book below.
+        </div>
+        <button type="button" onclick="closePrecheckResult()" style="background:none;border:none;font-size:16px;font-weight:700;color:var(--ink-dim);cursor:pointer;" title="Close">&times;</button>
+      </div>
+    `;
+  }
+}
+
+function prepareNewEditionForm(bookId){
+  const existing = catalog.find(b => b.id.toUpperCase() === bookId.toUpperCase());
+  if(!existing) return;
+
+  el('bookId').value = existing.id;
+  el('mTitle').value = existing.title;
+  el('mAuthor').value = existing.author;
+
+  el('mIsbn').value = ''; 
+  el('mEdition').value = '';
+  el('mYear').value = '';
+  el('mPages').value = '';
+  el('mEdition').focus();
+
+  const notice = el('notice');
+  notice.className = 'notice show warn';
+  notice.innerHTML = `
+    <span class="stamp-tag">📌 Registering New Edition for ${existing.id}</span>
+    <div>Registering a new edition for <b>"${existing.title}"</b> under Book ID <b>${existing.id}</b>.<br>
+    Enter edition name (e.g. <b>2nd edition</b>), new ISBN (if different), publication year, and total pages below, then click <b>Save to Catalog</b>.</div>
+  `;
+}
+
+// FILE HANDLING & OCR
+const dropzone = el('dropzone');
+const fileInput = el('fileInput');
+let chosenFile = null, chosenFileObj = null;
+
+const extToType = { txt:'txt', pdf:'pdf', png:'scan', jpg:'scan', jpeg:'scan' };
+function currentType(){ return document.querySelector('.filetype.active').dataset.type; }
+function setActiveTab(type){ document.querySelectorAll('.filetype').forEach(x=>{ x.classList.toggle('active', x.dataset.type===type); }); }
+document.querySelectorAll('.filetype').forEach(ft=>{ ft.addEventListener('click',()=>setActiveTab(ft.dataset.type)); });
+
+dropzone.addEventListener('click', ()=>fileInput.click());
+fileInput.addEventListener('change', ()=>{ if(fileInput.files&&fileInput.files[0]) setChosenFile(fileInput.files[0]); });
+dropzone.addEventListener('dragover', e=>{ e.preventDefault(); dropzone.style.borderColor='var(--navy)'; });
+dropzone.addEventListener('dragleave', ()=>{ dropzone.style.borderColor=''; });
+dropzone.addEventListener('drop', e=>{ e.preventDefault(); dropzone.style.borderColor=''; if(e.dataTransfer.files&&e.dataTransfer.files[0]) setChosenFile(e.dataTransfer.files[0]); });
+
+function setChosenFile(file){
+  chosenFile = file.name; chosenFileObj = file;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(extToType[ext]) setActiveTab(extToType[ext]);
+  dropzone.classList.add('filled');
+  dropzone.innerHTML = 'File attached (Ready)<div class="fname">' + file.name + '</div>';
+}
+
+function setOcrProgress(msg, pct){
+  const ocrProgress = el('ocrProgress');
+  const ocrBar = el('ocrBar');
+  const ocrMsg = el('ocrMsg');
+  if(msg === null){ ocrProgress.classList.remove('show'); ocrBar.style.width='0%'; return; }
+  ocrProgress.classList.add('show');
+  ocrMsg.textContent = msg;
+  if(pct !== undefined) ocrBar.style.width = pct + '%';
+}
+
+// HEURISTIC METADATA EXTRACTION
+function heuristicExtractMetadata(text, knownPageCount){
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  const result = { title:'Unknown', author:'Unknown', year:'Unknown', edition:'Unknown', pages:'Unknown', isbn:'', titleCandidates:[] };
+
+  const hasKannada = s => /[\u0C80-\u0CFF]/.test(s);
+  const cleanTitleLine = s => s.replace(/^[\s|#:–\-\.*_~\|॥]+/, '').replace(/[\s|#:–\-\.*_~\|॥]+$/, '').replace(/^(?:\|\|\s*ಶ್ರೀಃ?\s*\|\||ಶ್ರೀಃ?|ಓಂ|\d{1,2}[\.\-\)])\s*/i, '').replace(/\s+/g, ' ').trim();
+  const isBadTitle = l => /[|]/.test(l) || /^\s*[A-Z0-9\s|#:–\-\.]{1,12}\s*$/.test(l) || /^\d+$/.test(l) || /^[\d\s\-–:.,]+$/.test(l) || /\b(isbn|issn|doi|crn|sl\.?\s*no|price|rs\.?|vol|volume|edition|pages?|press|publishers?|print|copyright|all\s*rights|government|karnataka|department)\b/i.test(l) || /(?:ಪ್ರಕಾಶನ|ಮುದ್ರಣ|ಬೆಲೆ|ಸಂಪುಟ|ಆವೃತ್ತಿ|ಪುಟಗಳು|ಪ್ರತಿಗಳು|ಸರ್ಕಾರ|ಕರ್ನಾಟಕ|ಇಲಾಖೆ)/.test(l);
+  const isBadAuthor = s => /impression|impress|publish|printer|press|edition|pvt|ltd|inc|trust|samiti|sangha|university|college|institute|bangalore|bengaluru|mysore|mysuru|mangalore|hubli|dharwad|belagavi|chennai|delhi|mumbai|\d{4}/i.test(s) || /(?:ಪ್ರಕಾಶನ|ಮುದ್ರಣಾಲಯ|ಮುದ್ರಕರು|ಟ್ರಸ್ಟ್|ಸಂಸ್ಥೆ|ವಿಶ್ವವಿದ್ಯಾನಿಲಯ|ಕಾಲೇಜು|ಸಮಿತಿ|ಸಂಘ|ಬೆಂಗಳೂರು|ಮೈಸೂರು|ಧಾರವಾಡ|ಮಂಗಳೂರು)/.test(s);
+  const cleanAuthorName = s => s.replace(/\b(joint\s*director|deputy\s*director|assistant\s*director|director|chief\s*editor|editor|compiler|co-ordinator|coordinator|professor|reader|lecturer|dean|chairman|president|secretary|convenor|ias|ips|kas|ph\.?d|m\.?a|m\.?phil)\b.*$/i, '').replace(/(?:ಜಂಟಿ\s*ನಿರ್ದೇಶಕರು|ಉಪ\s*ನಿರ್ದೇಶಕರು|ಸಹಾಯಕ\s*ನಿರ್ದೇಶಕರು|ನಿರ್ದೇಶಕರು|ಪ್ರಧಾನ\s*ಸಂಪಾದಕರು|ಸಂಪಾದಕರು|ಸಂಯೋಜಕರು|ಪ್ರಾಧ್ಯಾಪಕರು|ಅಧ್ಯಕ್ಷರು|ಕಾರ್ಯದರ್ಶಿ|ಸಂಚಾಲಕರು).*$/, '').replace(/^[\s\-–:,.]+/, '').replace(/[\s\-–:,.]+$/, '').trim();
+
+  // 1. Explicit title markers
+  const explicitTitleMatch = text.match(/(?:ಪುಸ್ತಕದ\s*ಹೆಸರು|ಕೃತಿಯ\s*ಹೆಸರು|ಶೀರ್ಷಿಕೆ|ಕೃತಿ|ಪುಸ್ತಕ|ಕಾದಂಬರಿ|ಕಾವ್ಯ|ನಾಟಕ|ಗ್ರಂಥ|title)\s*[:\-]?\s*([^\n]+)/i);
+  if(explicitTitleMatch){
+    const cleanedExplicit = cleanTitleLine(explicitTitleMatch[1]);
+    if(cleanedExplicit.length >= 3 && !isBadTitle(cleanedExplicit)) result.title = cleanedExplicit;
+  }
+
+  // 2. Candidate collection
+  const rawCandidates = lines.map(cleanTitleLine).filter(l => hasKannada(l) && l.length >= 3 && l.length <= 100 && !isBadTitle(l));
+  result.titleCandidates = Array.from(new Set(rawCandidates)).slice(0, 5);
+  if(result.title === 'Unknown' && result.titleCandidates.length > 0){
+    result.title = result.titleCandidates[0];
+  } else if(result.title === 'Unknown'){
+    const fallback = lines.map(cleanTitleLine).find(l => l.length >= 4 && l.length <= 80 && !isBadTitle(l));
+    if(fallback) result.title = fallback;
+  }
+
+  // 3. Author
+  const authorPatterns = [
+    /(?:\u0cb2\u0cc7\u0c96\u0c95\u0cb0\u0cc1|\u0cb2\u0cc7\u0c96\u0c95|\u0c95\u0cb0\u0ccd\u0ca4\u0cc3|\u0cb0\u0c9a\u0ca8\u0cc6|\u0cac\u0cb0\u0cc6\u0ca6\u0cb5\u0cb0\u0cc1)\s*[:\-]?\s*([^\n,.(]{2,70})/i,
+    /\bauthor\s*[:\-]\s*([^\n,.(\d]{3,70})/i,
+    /\bwritten\s+by\s*[:\-]?\s*([A-Z][a-zA-Z.\s]{3,60})/i,
+    /\bby\s+([A-Z][a-zA-Z.\s]{3,60})(?!\s*(?:press|pub|pvt|ltd|inc|trust|samiti|sangha|order))/i
+  ];
+  for(const pat of authorPatterns){
+    const m = text.match(pat);
+    if(m){
+      let candidate = cleanAuthorName(m[1].trim().replace(/\s+/g,' '));
+      if(candidate.length >= 2 && !isBadAuthor(candidate)){ result.author = candidate; break; }
+    }
+  }
+
+  // 4. ISBN
+  const isbnMatch = text.match(/(?:isbn(?:-13|-10)?)\s*[:\-]?\s*([\d\-Xx]{10,18})/i) || text.match(/\b(97[89][\d\-]{10,14}\d)\b/);
+  if(isbnMatch) result.isbn = isbnMatch[1].trim();
+
+  // 5. Year
+  const yearMatch = text.match(/\b(18|19|20)\d{2}\b/);
+  if(yearMatch) result.year = yearMatch[0];
+
+  // 6. Edition
+  const editionMatch = text.match(/(?:\u0c86\u0cb5\u0cc3\u0ca4\u0ccd\u0ca4\u0cbf)\s*[:\-]?\s*(\S+)/i) || text.match(/(\d+(?:st|nd|rd|th)\s+edition)/i) || text.match(/(first|second|third|fourth|fifth|revised)\s+edition/i);
+  result.edition = editionMatch ? editionMatch[0].trim() : '1st edition';
+
+  // 7. Pages
+  if(knownPageCount){
+    result.pages = String(knownPageCount);
+  } else {
+    const pm = text.match(/(?:\u0caa\u0cc1\u0c9f\u0c97\u0cb3\u0cc1|pages?|pp\.?)\s*[:\-]?\s*(\d{1,5})/i) || text.match(/(\d{2,4})\s*(?:pages?|pp)/i);
+    if(pm) result.pages = pm[1];
+  }
+
+  return result;
+}
+
+// AUTOFILL HANDLER
+const autofillBtn = el('autofillBtn');
+const autofillHint = el('autofillHint');
+
+autofillBtn.addEventListener('click', async ()=>{
+  if(!chosenFileObj){
+    autofillHint.style.color = 'var(--brick)';
+    autofillHint.textContent = 'Please choose a book file first to run OCR.';
+    return;
+  }
+  const type = currentType();
+  autofillBtn.disabled = true;
+  autofillBtn.textContent = 'Processing OCR...';
+  autofillHint.style.color = 'var(--ink-dim)';
+  autofillHint.textContent = 'Reading document text...';
+  let excerpt = '', knownPageCount = null;
+  let worker = null;
+
+  try{
+    if(type === 'txt'){
+      setOcrProgress('Reading text file...', 50);
+      excerpt = (await chosenFileObj.text()).slice(0, 8000);
+    } else if(type === 'scan'){
+      setOcrProgress('Starting OCR engine...', 30);
+      try {
+        worker = await Tesseract.createWorker(['kan', 'eng'], 1, {
+          logger: m => { if(m.status === 'recognizing text') setOcrProgress('Recognizing text — ' + Math.round((m.progress||0)*100) + '%', 40 + Math.round((m.progress||0)*50)); }
+        });
+      } catch(e){ worker = await Tesseract.createWorker(['eng'], 1); }
+      setOcrProgress('Recognizing text...', 60);
+      const ocrResult = await worker.recognize(chosenFileObj);
+      excerpt = (ocrResult.data && ocrResult.data.text ? ocrResult.data.text : '').slice(0, 8000);
+      knownPageCount = 1;
+    } else if(type === 'pdf'){
+      setOcrProgress('Checking PDF...', 20);
+      const buffer = await chosenFileObj.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      knownPageCount = pdf.numPages;
+      const scanPages = Math.min(knownPageCount, 4);
+      let directText = '';
+      for(let i=1; i<=scanPages; i++){
+        try {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map(item => item.str).join(' ');
+          if(strings.trim()) directText += strings + '\n\n';
+        } catch(e){}
+      }
+      if(directText.trim().length >= 40){
+        excerpt = directText.slice(0, 8000);
+      } else {
+        try {
+          worker = await Tesseract.createWorker(['kan', 'eng'], 1);
+        } catch(e){ worker = await Tesseract.createWorker(['eng'], 1); }
+        for(let i=1; i<=scanPages; i++){
+          setOcrProgress('Rendering PDF page '+i+'...', Math.round((i/scanPages)*60));
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width; canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+          const { data } = await worker.recognize(canvas);
+          excerpt += (data.text || '') + '\n\n';
+        }
+      }
+    }
+
+    if(!excerpt.trim()){
+      autofillHint.style.color = 'var(--brick)';
+      autofillHint.textContent = 'No readable text found. You can enter details manually below.';
+      return;
+    }
+
+    const guess = heuristicExtractMetadata(excerpt, knownPageCount);
+    if(guess.title && guess.title !== 'Unknown') el('mTitle').value = guess.title;
+    if(guess.author && guess.author !== 'Unknown') el('mAuthor').value = guess.author;
+    if(guess.isbn) el('mIsbn').value = guess.isbn;
+    if(guess.year && guess.year !== 'Unknown') el('mYear').value = guess.year;
+    if(guess.edition && guess.edition !== 'Unknown') el('mEdition').value = guess.edition;
+    if(guess.pages && guess.pages !== 'Unknown') el('mPages').value = guess.pages;
+
+    // Suggestions
+    const suggBox = el('titleSuggestions');
+    if(suggBox && guess.titleCandidates && guess.titleCandidates.length > 0){
+      suggBox.style.display = 'flex';
+      suggBox.innerHTML = '<span style="font-size:10px;color:var(--ink-dim);width:100%;margin-bottom:2px;">💡 Click a detected title:</span>' +
+        guess.titleCandidates.map(c => `<button type="button" class="title-chip" onclick="el('mTitle').value=\`${c.replace(/`/g,'\\`')}\`">${c}</button>`).join('');
+    } else if(suggBox) { suggBox.style.display = 'none'; }
+
+    autofillHint.style.color = 'var(--moss)';
+    autofillHint.textContent = '✓ Extracted successfully! Review or edit details below before saving.';
+  } catch(err){
+    console.error(err);
+    autofillHint.style.color = 'var(--brick)';
+    autofillHint.textContent = 'OCR note: Could not complete auto-extraction. Please fill in fields manually.';
+  } finally {
+    if(worker){ try { await worker.terminate(); } catch(e){} }
+    setOcrProgress(null);
+    autofillBtn.disabled = false;
+    autofillBtn.textContent = '✨ Auto-fill with AI (OCR from file)';
+  }
+});
+
+// COPYRIGHT BADGE DISPLAY UTILITY
+function getCopyrightBadgeHTML(b){
+  const st = (b && b.copyrightStatus) ? b.copyrightStatus : 'unknown';
+  if(st === 'public_domain'){
+    return `<span class="copyright-badge public_domain" style="background:var(--moss-soft);border:1px solid var(--moss);color:var(--moss);font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:3px;">🟢 PUBLIC DOMAIN</span>`;
+  } else if(st === 'copyrighted'){
+    return `<span class="copyright-badge copyrighted" style="background:var(--brick-soft);border:1px solid var(--brick);color:var(--brick);font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:3px;">🔴 COPYRIGHTED</span>`;
+  } else if(st === 'permission_available'){
+    return `<span class="copyright-badge permission_available" style="background:var(--gold-soft);border:1px solid var(--gold);color:#7A5C20;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:3px;">🔵 PERMISSION AVAILABLE</span>`;
+  } else {
+    return `<span class="copyright-badge unknown" style="background:var(--cream-dark);border:1px solid var(--hairline);color:var(--ink-dim);font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:3px;">⚪ STATUS UNKNOWN</span>`;
+  }
+}
+
+// CATALOG RENDERING
+function renderLedger(filter=''){
+  const listEl = el('ledgerList');
+  if(!listEl) return;
+  const q = (filter||'').trim().toLowerCase();
+  const items = catalog.filter(b => {
+    if(!q) return true;
+    if(b.title.toLowerCase().includes(q)) return true;
+    if(b.titleEnglish && b.titleEnglish.toLowerCase().includes(q)) return true;
+    if(b.author.toLowerCase().includes(q)) return true;
+    if(b.id.toLowerCase().includes(q)) return true;
+    if(b.isbn && b.isbn.toLowerCase().includes(q)) return true;
+    if(b.editions && b.editions.some(e => (e.edition && e.edition.toLowerCase().includes(q)))) return true;
+    return false;
+  });
+
+  if(items.length === 0){
+    listEl.innerHTML = '<div style="text-align:center;padding:50px 20px;color:var(--ink-dim);font-style:italic;">No books match that search.</div>';
+    return;
+  }
+
+  const myCollege = (loggedInUser && loggedInUser.college) ? loggedInUser.college.trim().toLowerCase() : '';
+
+  listEl.innerHTML = items.map((b, idx) => {
+    const eds = b.editions || [{ edition: b.edition || '1st edition', year: b.year, pages: b.pages, status: 'Digitalization Submitted' }];
+    const count = eds.length;
+    const latestEdIdx = eds.length - 1;
+    const latestEd = eds[latestEdIdx];
+    const isProgress = (latestEd.status||'').includes('Pending') || (latestEd.status||'').includes('Progress') || (latestEd.status||'').includes('Scanning');
+    const hasFile = !!latestEd.fileName;
+    const edCollege = (latestEd.createdByCollege || b.createdByCollege || '').trim();
+    const isMyCollege = (edCollege.toLowerCase() === myCollege);
+
+    return `
+      <div class="ledger-entry">
+        <div class="ledger-main">
+          <div class="ledger-title">
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-weight:700;margin-right:6px;">#${idx + 1}</span>
+            ${b.title} ${b.titleEnglish ? `<span style="font-size:13px;color:var(--ink-dim);font-style:italic;font-weight:normal;">(${b.titleEnglish})</span>` : ''} ${b.isbn ? `<span class="isbn-tag">ISBN ${b.isbn}</span>` : ''}
+            <span style="margin-left:6px;">${getCopyrightBadgeHTML(b)}</span>
+          </div>
+          <div class="ledger-sub" style="display:flex;flex-direction:column;gap:4px;margin-top:6px;align-items:flex-start;">
+            <div style="font-size:12.5px;color:var(--ink-mid);">Author: <b style="color:var(--navy);">${b.author}</b></div>
+            <div style="font-size:12px;color:var(--ink-mid);">Book ID: <b style="font-family:'JetBrains Mono',monospace;color:var(--navy);">${b.id}</b></div>
+            <div><span class="edition-count-badge">${count} ${count > 1 ? 'Editions' : 'Edition'}</span></div>
+            <div>
+              <span class="status-pill ${isProgress ? 'progress' : 'done'}">${isProgress ? '⏳ Upload Pending' : '✓ Digitalization Submitted'}</span>
+              ${hasFile ? `<span class="file-attached-tag" style="margin-left:4px;">📄 ${latestEd.fileName}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          ${(isProgress && isMyCollege) ? `<button type="button" class="btn-upload-later" onclick="openUploadModal('${b.id}', ${latestEdIdx})">📤 Upload Book</button>` : ''}
+          <button type="button" class="btn-details" onclick="viewBookDetails('${b.id}')">👁️ View Details & History</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+const searchBox = el('searchBox');
+if(searchBox){
+  searchBox.addEventListener('input', ()=>renderLedger(searchBox.value));
+}
+
+// VIEW DETAILS MODAL
+const detailsModal = el('detailsModal');
+el('btnCloseModal').addEventListener('click', ()=>detailsModal.classList.remove('show'));
+detailsModal.addEventListener('click', (e)=>{ if(e.target===detailsModal) detailsModal.classList.remove('show'); });
+
+function viewBookDetails(bookId){
+  const b = catalog.find(x => x.id.toUpperCase() === bookId.toUpperCase());
+  if(!b) return;
+
+  const eds = b.editions || [{ edition: b.edition || '1st edition', year: b.year, pages: b.pages, status: 'Digitized' }];
+  const edNames = eds.map(e => e.edition || '1st edition').join(', ');
+  const myCollege = (loggedInUser && loggedInUser.college) ? loggedInUser.college.trim().toLowerCase() : '';
+
+  el('modalTitle').textContent = `${b.id} — ${b.title}`;
+  el('modalMeta').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:13.5px;color:var(--navy);font-weight:600;">Author: <b>${b.author}</b> ${b.isbn ? ` &middot; Master ISBN: <b>${b.isbn}</b>` : ''}</div>
+      <div>${getCopyrightBadgeHTML(b)}</div>
+    </div>
+    <div style="font-size:12px;color:var(--navy);">📚 Available Editions: <b style="color:var(--gold);">${edNames}</b></div>
+  `;
+
+  const listEl = el('modalEditionsList');
+
+  listEl.innerHTML = eds.map((ed, idx) => {
+    const isProg = (ed.status||'').includes('Progress') || (ed.status||'').includes('Scanning');
+    const hasFile = !!ed.fileName;
+    const edCollege = (ed.createdByCollege || b.createdByCollege || 'Karnataka Library Network').trim();
+    const isMyCollege = (edCollege.toLowerCase() === myCollege);
+
+    return `
+      <div class="modal-edition-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--navy);font-size:12.5px;">Edition ${idx+1}: ${ed.edition || 'Edition ' + (idx+1)}</span>
+          <span class="status-pill ${isProg ? 'progress' : 'done'}">${isProg ? '⏳ Upload Pending' : '✓ Digitized / Completed'}</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--ink-dim);margin-bottom:4px;">
+          Publication Year: <b>${ed.year || '—'}</b> &middot; Total Pages: <b>${ed.pages ? ed.pages + ' pages' : 'N/A'}</b>
+          ${ed.isbn ? ` &middot; Edition ISBN: <b style="color:var(--navy);">${ed.isbn}</b>` : ''}
+          ${ed.date ? ` &middot; Date: <b>${ed.date}</b>` : ''}
+        </div>
+        <div style="font-size:11px;color:var(--ink-mid);margin-bottom:6px;">
+          Institution: <b style="color:${isMyCollege ? 'var(--moss)' : 'var(--navy)'};">${edCollege}</b> ${isMyCollege ? ' (Your Institution)' : ''}
+        </div>
+        ${hasFile ? `<div style="margin-bottom:8px;"><span class="file-attached-tag">📄 Attached File: <b>${ed.fileName}</b> ${ed.fileSize ? `(${ed.fileSize})` : ''}</span></div>` : '<div style="font-size:11px;color:var(--brick);margin-bottom:8px;">⚠️ Digital document file not attached yet.</div>'}
+        
+        ${isMyCollege ? `
+          <div style="display:flex;justify-content:flex-end;">
+            <button type="button" class="btn-upload-later-sm ${hasFile ? 'secondary' : ''}" onclick="openUploadModal('${b.id}', ${idx})">
+              ${hasFile ? '🔄 Replace / Update File' : '📤 Upload Book File Now'}
+            </button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('') + `
+    <!-- BOOK HISTORY & COPYRIGHT INFORMATION SECTION -->
+    <div style="margin-top:16px;background:var(--paper);border:1.5px solid var(--navy);border-radius:5px;padding:14px;">
+      <div style="font-family:'Fraunces',serif;font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;">
+        📜 Book History & College Registration Record
+      </div>
+      <div style="font-size:12.5px;color:var(--ink-mid);line-height:1.7;">
+        <div><b>Book Title:</b> ${b.title}</div>
+        <div><b>Book ID:</b> <b style="font-family:'JetBrains Mono',monospace;color:var(--navy);">${b.id}</b></div>
+        <div><b>Uploaded / Registered by College:</b> <b style="color:var(--navy);font-size:13px;background:var(--cream-mid);border:1px solid var(--hairline);padding:2px 8px;border-radius:3px;">🏛️ ${b.createdByCollege || (eds[0] ? eds[0].createdByCollege : 'University of Mysore')}</b></div>
+        <div><b>Uploaded Date:</b> ${b.date || (eds[0] ? eds[0].date : '17 August 2026')}</div>
+      </div>
+
+      <div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--hairline);">
+        <div style="font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">
+          Copyright Information & Record Source
+        </div>
+        <div style="margin-bottom:8px;">${getCopyrightBadgeHTML(b)}</div>
+        <div style="font-size:12px;color:var(--ink-dim);margin-bottom:6px;">
+          Copyright status recorded by: <b style="color:var(--navy);">${b.createdByCollege || (eds[0] ? eds[0].createdByCollege : 'University of Mysore')}</b>
+        </div>
+        ${(b.copyrightStatus === 'copyrighted') ? `
+          <div style="font-size:12px;color:var(--ink);line-height:1.5;">
+            <div><b>Copyright Holder Shown in Book:</b> ${b.copyrightHolder || 'N/A'}</div>
+            <div><b>Copyright Year:</b> ${b.copyrightYear || 'N/A'}</div>
+            <div><b>Copyright Information:</b> ${b.copyrightNotice || 'N/A'}</div>
+            <div style="margin-top:6px;background:var(--brick-soft);border:1px solid var(--brick);border-radius:4px;padding:8px 10px;font-size:11.5px;color:var(--brick);font-weight:600;">
+              ⚠️ Permission may be required before digitizing, sharing, or using this content.
+            </div>
+          </div>
+        ` : (b.copyrightStatus === 'public_domain') ? `
+          <div style="font-size:12px;color:var(--moss);font-weight:600;">
+            🟢 Marked as Public Domain / Non-Copyrighted by <b>${b.createdByCollege || (eds[0] ? eds[0].createdByCollege : 'University of Mysore')}</b>.
+          </div>
+        ` : (b.copyrightStatus === 'permission_available') ? `
+          <div style="font-size:12px;color:var(--ink);line-height:1.5;">
+            <div><b>Permission Holder / Organization:</b> ${b.permissionHolder || 'N/A'}</div>
+            ${b.permissionRef ? `<div><b>Permission Ref:</b> ${b.permissionRef}</div>` : ''}
+            <div style="margin-top:4px;color:#7A5C20;font-weight:600;">🔵 Permission information recorded by <b>${b.createdByCollege || (eds[0] ? eds[0].createdByCollege : 'University of Mysore')}</b>.</div>
+          </div>
+        ` : `
+          <div style="font-size:12px;color:var(--ink-dim);">
+            ⚪ Copyright status has not been verified. <b>COPYRIGHT STATUS: UNKNOWN</b> (Recorded by ${b.createdByCollege || (eds[0] ? eds[0].createdByCollege : 'University of Mysore')})
+          </div>
+        `}
+      </div>
+    </div>
+
+    <div style="margin-top:14px;padding-top:10px;border-top:1px dashed var(--hairline);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:11.5px;color:var(--ink-dim);">Need to register another edition?</span>
+      <button type="button" class="btn-upload-later-sm" style="background:var(--moss);padding:6px 12px;" onclick="detailsModal.classList.remove('show'); prepareNewEditionForm('${b.id}');">
+        ➕ Add New Edition to ${b.id}
+      </button>
+    </div>
+  `;
+
+  detailsModal.classList.add('show');
+}
+
+function deleteBook(id){
+  if(!confirm('Are you sure you want to delete book "'+id+'" from the catalog?')) return;
+  catalog = catalog.filter(b=>b.id.toUpperCase()!==id.toUpperCase());
+  saveCatalog();
+  renderLedger(searchBox.value);
+  btnToggleCatalog.textContent = '📚 View Catalog Index (' + catalog.length + ' Books)';
+}
+
+// RESET & SAVE
+function getSelectedCopyrightStatus(){
+  const checked = document.querySelector('input[name="copyrightStatus"]:checked');
+  return checked ? checked.value : 'unknown';
+}
+
+function updateCopyrightUI(){
+  const val = getSelectedCopyrightStatus();
+  if(el('boxCopyrighted')) el('boxCopyrighted').style.display = (val === 'copyrighted') ? 'block' : 'none';
+  if(el('boxPublicDomain')) el('boxPublicDomain').style.display = (val === 'public_domain') ? 'block' : 'none';
+  if(el('boxPermission')) el('boxPermission').style.display = (val === 'permission_available') ? 'block' : 'none';
+  if(el('boxUnknown')) el('boxUnknown').style.display = (val === 'unknown') ? 'block' : 'none';
+}
+
+document.querySelectorAll('input[name="copyrightStatus"]').forEach(r => {
+  r.addEventListener('change', updateCopyrightUI);
+});
+
+function resetUploadForm(){
+  el('bookId').value = '';
+  el('mIsbn').value = '';
+  el('mTitle').value = '';
+  if(el('mTitleEnglish')) el('mTitleEnglish').value = '';
+  el('mAuthor').value = '';
+  el('mEdition').value = '';
+  el('mYear').value = '';
+  el('mPages').value = '';
+  if(el('cHolder')) el('cHolder').value = '';
+  if(el('cYear')) el('cYear').value = '';
+  if(el('cNotice')) el('cNotice').value = '';
+  if(el('pOrganization')) el('pOrganization').value = '';
+  if(el('pRef')) el('pRef').value = '';
+  if(el('chkCopyrightedConfirm')) el('chkCopyrightedConfirm').checked = false;
+  if(el('chkPublicDomainConfirm')) el('chkPublicDomainConfirm').checked = false;
+  const copyrightedRadio = document.querySelector('input[name="copyrightStatus"][value="copyrighted"]');
+  if(copyrightedRadio) copyrightedRadio.checked = true;
+  updateCopyrightUI();
+
+  if(el('titleSuggestions')) el('titleSuggestions').style.display = 'none';
+  chosenFile = null; chosenFileObj = null;
+  dropzone.classList.remove('filled');
+  dropzone.innerHTML = '<b>Tap to choose book file</b> (Optional)<div style="font-size:11px;color:var(--ink-dim);margin-top:2px;">Scanning takes time? You can save metadata now & upload file later!</div>';
+}
+
+el('submitBtn').addEventListener('click', async ()=>{
+  let id = normalizeId(el('bookId').value);
+  if(!id){
+    id = generateNextBookId(el('bookCategory') ? el('bookCategory').value : 'GEN');
+    el('bookId').value = id;
+  }
+  const isbn = el('mIsbn').value.trim();
+  const title = el('mTitle').value.trim();
+  const titleEnglish = el('mTitleEnglish') ? el('mTitleEnglish').value.trim() : '';
+  const author = el('mAuthor').value.trim();
+  const edition = el('mEdition').value.trim() || '1st edition';
+  const year = el('mYear').value.trim();
+  const pages = el('mPages').value.trim();
+  const notice = el('notice');
+
+  const copyrightStatus = getSelectedCopyrightStatus();
+  const cHolder = el('cHolder') ? el('cHolder').value.trim() : '';
+  const cYear = el('cYear') ? el('cYear').value.trim() : '';
+  const cNotice = el('cNotice') ? el('cNotice').value.trim() : '';
+  const pOrg = el('pOrganization') ? el('pOrganization').value.trim() : '';
+  const pRef = el('pRef') ? el('pRef').value.trim() : '';
+
+  notice.className = 'notice'; notice.innerHTML = '';
+
+  if(!title || !author || !year || !pages){
+    notice.className = 'notice show warn';
+    notice.innerHTML = '<span class="stamp-tag">Missing Information</span><div>Please fill in Title (Kannada), Author, Year, and Total Pages.</div>';
+    return;
+  }
+
+  // Copyright Validations
+  if(copyrightStatus === 'copyrighted'){
+    if(!cHolder){
+      notice.className = 'notice show warn';
+      notice.innerHTML = '<span class="stamp-tag">Copyright Info Required</span><div>Please specify the Copyright Holder shown in the book.</div>';
+      return;
+    }
+    if(!el('chkCopyrightedConfirm').checked){
+      notice.className = 'notice show warn';
+      notice.innerHTML = '<span class="stamp-tag">Confirmation Required</span><div>Please check the box confirming you checked copyright info in the book.</div>';
+      return;
+    }
+  } else if(copyrightStatus === 'public_domain'){
+    if(!el('chkPublicDomainConfirm').checked){
+      notice.className = 'notice show warn';
+      notice.innerHTML = '<span class="stamp-tag">Confirmation Required</span><div>Please check the box confirming you verified the copyright status of this book.</div>';
+      return;
+    }
+  } else if(copyrightStatus === 'permission_available'){
+    if(!pOrg){
+      notice.className = 'notice show warn';
+      notice.innerHTML = '<span class="stamp-tag">Organization Required</span><div>Please enter the Permission Holder / Organization.</div>';
+      return;
+    }
+  }
+
+  // Status is marked based on whether file is attached right now
+  const digitizationStatus = chosenFile ? 'Digitized' : 'In Progress / Scanning';
+  const attachedFileName = chosenFile || null;
+  const attachedFileSize = chosenFileObj ? (chosenFileObj.size / (1024*1024)).toFixed(2) + ' MB' : null;
+
+  // Notification Banner Format (Matching Requirement #8)
+  let copyBannerText = '';
+  if(copyrightStatus === 'copyrighted'){
+    copyBannerText = `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--hairline);font-size:12px;color:var(--brick);">
+        <b>Copyright Status:</b> Copyrighted (🔴)<br>
+        <b>Copyright Holder:</b> ${cHolder}<br>
+        ⚠️ <i>Permission may be required before digitizing, sharing, or using the content.</i>
+      </div>
+    `;
+  } else if(copyrightStatus === 'public_domain'){
+    copyBannerText = `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--hairline);font-size:12px;color:var(--moss);font-weight:600;">
+        <b>Copyright Status:</b> Public Domain / Non-Copyrighted (🟢 Verified)
+      </div>
+    `;
+  } else if(copyrightStatus === 'permission_available'){
+    copyBannerText = `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--hairline);font-size:12px;color:#7A5C20;font-weight:600;">
+        <b>Copyright Status:</b> Permission Available (🔵 Organization: ${pOrg})
+      </div>
+    `;
+  } else {
+    copyBannerText = `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--hairline);font-size:12px;color:var(--ink-dim);font-weight:600;">
+        <b>Copyright Status:</b> UNKNOWN (⚪ Not Verified)
+      </div>
+    `;
+  }
+
+  // Post to backend API
+  try {
+    const res = await fetch('/api/catalog/book', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${loggedInUser ? loggedInUser.token : ''}`
+      },
+      body: JSON.stringify({
+        id, title, titleEnglish, author, isbn, edition, year, pages,
+        digitizationStatus, fileName: attachedFileName, fileSize: attachedFileSize,
+        copyrightStatus, copyrightHolder: cHolder, copyrightYear: cYear, copyrightNotice: cNotice,
+        permissionHolder: pOrg, permissionRef: pRef
+      })
+    });
+    const data = await res.json();
+    if(res.ok && data.success){
+      await fetchCatalogFromApi();
+      notice.className = 'notice show ok';
+      notice.innerHTML = `
+        <span class="stamp-tag">📚 Book Uploaded Successfully</span>
+        <div style="font-size:13px;margin-top:4px;"><b>Book:</b> "${title}" (${edition}) registered under ID <b>${id}</b>.</div>
+        ${copyBannerText}
+      `;
+      resetUploadForm();
+      return;
+    }
+  } catch(e){}
+
+  // Local fallback save
+  const existing = findMatchingBook(id, title, author, isbn);
+  if(existing){
+    if(!existing.editions) existing.editions = [];
+    existing.editions.push({
+      edition, year, pages, isbn: isbn || existing.isbn || null,
+      status: digitizationStatus, date: new Date().toLocaleDateString(),
+      fileName: attachedFileName, fileSize: attachedFileSize,
+      createdByCollege: loggedInUser ? loggedInUser.college : 'Local College'
+    });
+    if(titleEnglish && !existing.titleEnglish) existing.titleEnglish = titleEnglish;
+    existing.copyrightStatus = copyrightStatus;
+    existing.copyrightHolder = cHolder;
+    existing.copyrightYear = cYear;
+    existing.copyrightNotice = cNotice;
+    existing.permissionHolder = pOrg;
+    existing.permissionRef = pRef;
+  } else {
+    catalog.unshift({
+      id, title, titleEnglish: titleEnglish || null, author, isbn, copyrightStatus, copyrightHolder: cHolder, copyrightYear: cYear, copyrightNotice: cNotice, permissionHolder: pOrg, permissionRef: pRef,
+      createdByCollege: loggedInUser ? loggedInUser.college : 'Local College',
+      date: new Date().toLocaleDateString(),
+      editions: [{ edition, year, pages, status: digitizationStatus, date: new Date().toLocaleDateString(), fileName: attachedFileName, fileSize: attachedFileSize, createdByCollege: loggedInUser ? loggedInUser.college : 'Local College' }]
+    });
+  }
+
+  saveCatalog();
+  renderLedger(searchBox ? searchBox.value : '');
+  if(btnToggleCatalog) btnToggleCatalog.textContent = '📚 View Catalog Index (' + catalog.length + ' Books)';
+
+  notice.className = 'notice show ok';
+  notice.innerHTML = `
+    <span class="stamp-tag">📚 Book Uploaded Successfully</span>
+    <div style="font-size:13px;margin-top:4px;"><b>Book:</b> "${title}" (${edition}) registered under ID <b>${id}</b>.</div>
+    ${copyBannerText}
+  `;
+  resetUploadForm();
+});
+
+// UPLOAD FILE LATER MODAL HANDLERS
+const uploadModal = el('uploadModal');
+const btnCloseUploadModal = el('btnCloseUploadModal');
+const modalDropzone = el('modalDropzone');
+const modalFileInput = el('modalFileInput');
+const btnConfirmUploadFile = el('btnConfirmUploadFile');
+const uploadModalNotice = el('uploadModalNotice');
+let activeUploadBookId = null;
+let activeUploadEditionIdx = 0;
+let modalSelectedFile = null;
+
+if(btnCloseUploadModal){
+  btnCloseUploadModal.addEventListener('click', ()=>uploadModal.classList.remove('show'));
+}
+if(uploadModal){
+  uploadModal.addEventListener('click', (e)=>{ if(e.target===uploadModal) uploadModal.classList.remove('show'); });
+}
+
+function openUploadModal(bookId, editionIdx = 0){
+  const b = catalog.find(x => x.id.toUpperCase() === bookId.toUpperCase());
+  if(!b) return;
+
+  const eds = b.editions || [{ edition: b.edition || '1st edition', year: b.year, pages: b.pages, status: 'Digitized' }];
+  const ed = eds[editionIdx] || eds[0];
+  const myCollege = (loggedInUser && loggedInUser.college) ? loggedInUser.college.trim().toLowerCase() : '';
+  const edCollege = (ed.createdByCollege || '').trim().toLowerCase();
+
+  // STRICT COLLEGE OWNERSHIP CHECK BEFORE OPENING UPLOAD MODAL
+  if(edCollege && edCollege !== myCollege){
+    alert(`⛔ Security Alert: This record was created by "${ed.createdByCollege}". Only "${ed.createdByCollege}" has permission to upload document files for this record!`);
+    return;
+  }
+
+  activeUploadBookId = b.id;
+  activeUploadEditionIdx = editionIdx;
+  modalSelectedFile = null;
+
+  el('uploadModalBookInfo').innerHTML = `Book: <b style="color:var(--navy);font-size:14px;">"${b.title}"</b> by <b>${b.author}</b> (ID: <b>${b.id}</b>)`;
+  el('uploadModalEditionInfo').innerHTML = `Target Record: <b>${ed.edition || 'Edition ' + (editionIdx + 1)}</b> (${ed.year || 'N/A'}) &middot; Institution: <b>${ed.createdByCollege || loggedInUser.college}</b>`;
+  
+  modalDropzone.classList.remove('filled');
+  modalDropzone.innerHTML = `
+    <b style="font-size:13px;">📁 Tap to select book file</b> or drag & drop here
+    <div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">Supports PDF (.pdf), Scans (.png, .jpg), Text (.txt)</div>
+    <div id="modalFileNameDisplay" style="font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:8px;color:var(--moss);font-weight:600;"></div>
+  `;
+  modalFileInput.value = '';
+  btnConfirmUploadFile.disabled = true;
+  uploadModalNotice.className = 'notice'; uploadModalNotice.innerHTML = '';
+  
+  uploadModal.classList.add('show');
+}
+
+if(modalDropzone && modalFileInput){
+  modalDropzone.addEventListener('click', ()=>modalFileInput.click());
+  modalFileInput.addEventListener('change', ()=>{ if(modalFileInput.files && modalFileInput.files[0]) setModalFile(modalFileInput.files[0]); });
+  modalDropzone.addEventListener('dragover', e=>{ e.preventDefault(); modalDropzone.style.borderColor='var(--moss)'; });
+  modalDropzone.addEventListener('dragleave', ()=>{ modalDropzone.style.borderColor=''; });
+  modalDropzone.addEventListener('drop', e=>{ e.preventDefault(); modalDropzone.style.borderColor=''; if(e.dataTransfer.files && e.dataTransfer.files[0]) setModalFile(e.dataTransfer.files[0]); });
+}
+
+function setModalFile(file){
+  modalSelectedFile = file;
+  modalDropzone.classList.add('filled');
+  const sizeMb = (file.size / (1024*1024)).toFixed(2);
+  const nameDisp = el('modalFileNameDisplay');
+  if(nameDisp) nameDisp.textContent = `Selected File: ${file.name} (${sizeMb} MB)`;
+  btnConfirmUploadFile.disabled = false;
+}
+
+if(btnConfirmUploadFile){
+  btnConfirmUploadFile.addEventListener('click', async ()=>{
+    if(!activeUploadBookId || !modalSelectedFile) return;
+    const b = catalog.find(x => x.id.toUpperCase() === activeUploadBookId.toUpperCase());
+    if(!b) return;
+
+    if(!b.editions || b.editions.length === 0){
+      b.editions = [{ edition: b.edition || '1st edition', year: b.year, pages: b.pages, status: 'In Progress / Scanning' }];
+    }
+    const ed = b.editions[activeUploadEditionIdx] || b.editions[0];
+
+    // Try API Upload with FormData
+    const formData = new FormData();
+    formData.append('bookId', b.id);
+    formData.append('editionIndex', activeUploadEditionIdx);
+    formData.append('file', modalSelectedFile);
+
+    btnConfirmUploadFile.disabled = true;
+    btnConfirmUploadFile.textContent = 'Uploading File...';
+
+    try {
+      const res = await fetch('/api/catalog/upload-file', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${loggedInUser ? loggedInUser.token : ''}`
+        },
+        body: formData
+      });
+      const data = await res.json();
+      if(!res.ok){
+        uploadModalNotice.className = 'notice show dup';
+        uploadModalNotice.innerHTML = `<span class="stamp-tag">Upload Error</span><div>${data.error}</div>`;
+        btnConfirmUploadFile.disabled = false;
+        btnConfirmUploadFile.textContent = 'Save & Complete Upload';
+        return;
+      }
+    } catch(e) {
+      // Local fallback update
+      const sizeMb = (modalSelectedFile.size / (1024*1024)).toFixed(2) + ' MB';
+      ed.status = 'Digitized';
+      ed.fileName = modalSelectedFile.name;
+      ed.fileSize = sizeMb;
+      ed.uploadDate = new Date().toLocaleDateString();
+      if(!ed.createdByCollege) ed.createdByCollege = loggedInUser ? loggedInUser.college : 'Local College';
+    }
+
+    saveCatalog();
+    renderLedger(searchBox ? searchBox.value : '');
+
+    if(detailsModal.classList.contains('show')){
+      viewBookDetails(b.id);
+    }
+    if(precheckQuery && precheckQuery.value.trim()){
+      runPrecheck();
+    }
+    renderMyUploadings(myUploadingsSearch ? myUploadingsSearch.value : '');
+
+    uploadModalNotice.className = 'notice show ok';
+    uploadModalNotice.innerHTML = `
+      <span class="stamp-tag">✓ Digitalization Submitted</span>
+      <div>File <b>"${modalSelectedFile.name}"</b> attached to <b>${ed.edition || 'this edition'}</b> of <b>"${b.title}"</b> by <b>${loggedInUser ? loggedInUser.college : ''}</b>. Status updated to <b>✓ Digitalization Submitted</b>!</div>
+    `;
+
+    setTimeout(()=>{
+      uploadModal.classList.remove('show');
+      btnConfirmUploadFile.disabled = false;
+      btnConfirmUploadFile.textContent = 'Save & Complete Upload';
+    }, 1600);
+  });
+}
+
+// MY UPLOADINGS DASHBOARD & SEARCH HANDLERS
+const myUploadingsModal = el('myUploadingsModal');
+const btnToggleMyUploadings = el('btnToggleMyUploadings');
+const btnCloseMyUploadings = el('btnCloseMyUploadings');
+const myUploadingsSearch = el('myUploadingsSearch');
+
+if(btnToggleMyUploadings){
+  btnToggleMyUploadings.addEventListener('click', ()=>{
+    renderMyUploadings('');
+    if(myUploadingsModal) myUploadingsModal.classList.add('show');
+  });
+}
+if(btnCloseMyUploadings){
+  btnCloseMyUploadings.addEventListener('click', ()=>{
+    if(myUploadingsModal) myUploadingsModal.classList.remove('show');
+  });
+}
+if(myUploadingsModal){
+  myUploadingsModal.addEventListener('click', (e)=>{
+    if(e.target === myUploadingsModal) myUploadingsModal.classList.remove('show');
+  });
+}
+if(myUploadingsSearch){
+  myUploadingsSearch.addEventListener('input', ()=>renderMyUploadings(myUploadingsSearch.value));
+}
+
+function openUploadModalFromMyUploadings(bookId, edIdx){
+  if(myUploadingsModal) myUploadingsModal.classList.remove('show');
+  openUploadModal(bookId, edIdx);
+}
+
+function renderMyUploadings(filter = ''){
+  const myCollege = (loggedInUser && loggedInUser.college) ? loggedInUser.college.trim() : 'University of Mysore';
+  const myCollegeLower = myCollege.toLowerCase();
+
+  if(el('myUploadingsCollegeName')) el('myUploadingsCollegeName').textContent = myCollege;
+
+  const collegeBooks = [];
+  catalog.forEach(b => {
+    const eds = b.editions || [{ edition: b.edition || '1st edition', year: b.year, pages: b.pages, status: 'Digitalization Submitted' }];
+    eds.forEach((ed, edIdx) => {
+      const edCollege = (ed.createdByCollege || b.createdByCollege || '').trim().toLowerCase();
+      if(edCollege === myCollegeLower){
+        collegeBooks.push({ book: b, edition: ed, editionIdx: edIdx });
+      }
+    });
+  });
+
+  const q = (filter || '').trim().toLowerCase();
+  const filtered = collegeBooks.filter(item => {
+    if(!q) return true;
+    if(item.book.title.toLowerCase().includes(q)) return true;
+    if(item.book.titleEnglish && item.book.titleEnglish.toLowerCase().includes(q)) return true;
+    if(item.book.author.toLowerCase().includes(q)) return true;
+    if(item.book.id.toLowerCase().includes(q)) return true;
+    return false;
+  });
+
+  let totalCount = collegeBooks.length;
+  let submittedCount = 0;
+  let pendingCount = 0;
+
+  collegeBooks.forEach(item => {
+    const st = (item.edition.status || '').toLowerCase();
+    if(st.includes('pending') || st.includes('progress') || st.includes('scanning')){
+      pendingCount++;
+    } else {
+      submittedCount++;
+    }
+  });
+
+  if(el('metricTotalCount')) el('metricTotalCount').textContent = totalCount;
+  if(el('metricSubmittedCount')) el('metricSubmittedCount').textContent = submittedCount;
+  if(el('metricPendingCount')) el('metricPendingCount').textContent = pendingCount;
+  if(el('myUploadsBadgeCount')) el('myUploadsBadgeCount').textContent = pendingCount > 0 ? `${submittedCount} / ${pendingCount} Pending` : `${submittedCount}`;
+
+  const listEl = el('myUploadingsList');
+  if(!listEl) return;
+
+  if(filtered.length === 0){
+    listEl.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--ink-dim);font-style:italic;">No records found for ${myCollege}.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(item => {
+    const b = item.book;
+    const ed = item.edition;
+    const isPending = (ed.status || '').toLowerCase().includes('pending') || (ed.status || '').toLowerCase().includes('progress') || (ed.status || '').toLowerCase().includes('scanning');
+
+    if(isPending){
+      return `
+        <div style="background:var(--paper);border:1.5px solid var(--gold);border-radius:5px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;">
+            <div>
+              <div style="font-family:'Noto Serif Kannada',serif;font-size:15px;font-weight:700;color:var(--navy);">
+                Book Title: <b>${b.title}</b> ${b.titleEnglish ? `<span style="font-size:13px;color:var(--ink-mid);font-style:italic;font-weight:normal;">(${b.titleEnglish})</span>` : ''}
+              </div>
+              <div style="font-size:12.5px;color:var(--ink-mid);margin-top:2px;">
+                Author: <b>${b.author}</b> &middot; ID: <b style="font-family:'JetBrains Mono',monospace;">${b.id}</b> (${ed.edition || '1st edition'})
+              </div>
+            </div>
+            <span class="status-pill progress">⏳ Upload Pending</span>
+          </div>
+
+          <div style="background:var(--gold-soft);border:1px solid var(--gold);border-radius:4px;padding:8px 12px;font-size:12px;color:#7A5C20;margin:8px 0;">
+            📌 <b>This book upload is pending.</b> Click below to select and upload the digital file.
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;">
+            <button type="button" class="btn-upload-later-sm" style="padding:7px 16px;background:var(--navy);" onclick="openUploadModalFromMyUploadings('${b.id}', ${item.editionIdx})">
+              📤 Upload Book
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <div style="background:var(--paper);border:1px solid var(--hairline);border-radius:5px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;">
+            <div>
+              <div style="font-family:'Noto Serif Kannada',serif;font-size:15px;font-weight:700;color:var(--navy);">
+                Book Title: <b>${b.title}</b> ${b.titleEnglish ? `<span style="font-size:13px;color:var(--ink-mid);font-style:italic;font-weight:normal;">(${b.titleEnglish})</span>` : ''}
+              </div>
+              <div style="font-size:12.5px;color:var(--ink-mid);margin-top:2px;">
+                Author: <b>${b.author}</b> &middot; ID: <b style="font-family:'JetBrains Mono',monospace;">${b.id}</b> (${ed.edition || '1st edition'})
+              </div>
+            </div>
+            <span class="status-pill done">✓ Digitalization Submitted</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-dim);margin-top:6px;">
+            Uploaded Date: <b>${ed.uploadDate || ed.date || 'Recently'}</b> ${ed.fileName ? `&middot; File: <b style="font-family:'JetBrains Mono',monospace;color:var(--moss);">${ed.fileName}</b> (${ed.fileSize || 'N/A'})` : ''}
+          </div>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+initSession();
+renderLedger('');
+renderMyUploadings('');
+</script>
+</body>
+</html>

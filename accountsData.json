@@ -1,0 +1,26 @@
+{
+  "shridevi institute of engineering & technology": {
+    "college": "Shridevi Institute of Engineering & Technology",
+    "dept": "Kannada Studies",
+    "password": "Kannadallm",
+    "createdAt": "17/8/2026"
+  },
+  "university of mysore": {
+    "college": "University of Mysore",
+    "dept": "General Library",
+    "password": "kannada2026",
+    "lastLogin": "17/8/2026"
+  },
+  "mangalore university": {
+    "college": "Mangalore University",
+    "dept": "Kannada Studies",
+    "password": "Kannadallm",
+    "createdAt": "18/8/2026"
+  },
+  "kannada university hampi": {
+    "college": "Kannada University Hampi",
+    "dept": "Kannada Studies",
+    "password": "Kannadallm",
+    "createdAt": "18/8/2026"
+  }
+}
